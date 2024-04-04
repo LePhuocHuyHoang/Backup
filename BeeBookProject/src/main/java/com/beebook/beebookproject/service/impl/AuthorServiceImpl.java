@@ -78,8 +78,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public ResponseEntity<?> addAuthor(AuthorRequest authorRequest) {
         try {
-            if (authorRepository.existsByName(authorRequest.getName())) {
-                throw new AccessDeniedException("Author with the same name already exists");
+            if (authorRequest.getName().isEmpty()){
+                throw new AccessDeniedException("Author name cannot null");
             }
             Author author = new Author();
             modelMapper.map(authorRequest, author);
@@ -98,13 +98,12 @@ public class AuthorServiceImpl implements AuthorService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse(false, "Author with the provided ID does not exist."));
         }
-        boolean authorWithSameNameExists = authorRepository.existsByName(newAuthor.getName());
-        if (authorWithSameNameExists) {
+        if (newAuthor.getName().isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse(false, "Another author with the same name already exists."));
+                    .body(new ApiResponse(false, "Another name cannot null."));
         }
         Author author = authorRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
+                .orElseThrow(() -> new ResourceNotFoundException("Author", "id", id));
         author.setName(newAuthor.getName());
         author.setDob(newAuthor.getDob());
         author.setBio(newAuthor.getBio());

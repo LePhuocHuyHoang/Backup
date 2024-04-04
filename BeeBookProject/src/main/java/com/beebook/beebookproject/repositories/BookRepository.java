@@ -80,4 +80,13 @@ public interface BookRepository extends JpaRepository<Book,Long>{
     @Query(value = "select * from rental_receipt where user_id = :userId and book_id = :bookId", nativeQuery = true)
     Object[] checkIsBought(@Param("userId")long userId, @Param("bookId")long bookId);
 
+    @Modifying
+    @Transactional
+    @Query(value = "EXEC addAuthorBook :authorName, :bookId", nativeQuery = true)
+    void addAuthorBook(@Param("authorName")String authorName, @Param("bookId")long bookId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "EXEC addBookType :typeName, :bookId", nativeQuery = true)
+    void addBookType(@Param("typeName")String typeName, @Param("bookId")long bookId );
 }

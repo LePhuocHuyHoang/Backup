@@ -114,10 +114,17 @@ public class BookServiceImpl implements BookService {
             if (bookRepository.existsByName(bookRequest.getName())) {
                 throw new AccessDeniedException("Book with the same name already exists");
             }
-            Book book = new Book();
-            modelMapper.map(bookRequest, book);
-            Book newBook = bookRepository.save(book);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newBook);
+            if(bookRequest.getName().isEmpty() || bookRequest.getAuthorName().isEmpty() || bookRequest.getPublisher().isEmpty()){
+                throw new AccessDeniedException("Cannot be empty");
+            }
+            if(bookRequest.getTotalPages() <= 0 || bookRequest.getPointPrice() <= 0 || bookRequest.getIbsn() <=0 ){
+                throw new AccessDeniedException("Do not set negative values");
+            }
+
+            Book book = bookRequest.toBook();
+            bookRepository.addAuthorBook(bookRequest.getAuthorName(), book.getId());
+            bookRepository.addBookType(bookRequest.getTypeName(), book.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(bookRequest);
         } catch (AccessDeniedException e) {
             ApiResponse apiResponse = new ApiResponse(false, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
@@ -135,8 +142,8 @@ public class BookServiceImpl implements BookService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse(false, "Another book with the same name already exists."));
         }
-            Book book = bookRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
 
         book.setName(newBook.getName());
         book.setIntroduce(newBook.getIntroduce());
@@ -146,8 +153,9 @@ public class BookServiceImpl implements BookService {
         book.setTotalPages(newBook.getTotalPages());
         book.setPointPrice(newBook.getPointPrice());
         book.setFileSource(newBook.getFileSource());
-        book.setIsFree(newBook.getIsFree());
-
+        book.setIsFree(newBook.isFree() ? 1L : 0);
+        bookRepository.addAuthorBook(newBook.getAuthorName(), book.getId());
+        bookRepository.addBookType(newBook.getTypeName(), book.getId());
         Book updatedBook = bookRepository.save(book);
         BookRequest bookRequest = new BookRequest();
         modelMapper.map(updatedBook, bookRequest);

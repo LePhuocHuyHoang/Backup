@@ -80,6 +80,9 @@ public class TypeServiceImpl implements TypeService {
             if (typeRepository.existsByName(typeRequest.getName())) {
                 throw new AccessDeniedException("Type with the same name already exists");
             }
+            if(typeRequest.getName().isEmpty()){
+                throw new AccessDeniedException("Type name cannot null");
+            }
             Type type = new Type();
             modelMapper.map(typeRequest, type);
             Type newType = typeRepository.save(type);
@@ -95,11 +98,6 @@ public class TypeServiceImpl implements TypeService {
         if (!typeExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse(false, "Type with the provided ID does not exist."));
-        }
-        boolean typeWithSameNameExists = typeRepository.existsByName(newType.getName());
-        if (typeWithSameNameExists) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse(false, "Another type with the same name already exists."));
         }
         Type type = typeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Type", "id", id));
