@@ -1,0 +1,183 @@
+.rectangle {
+  background-color: #000;
+  height: 84px;
+}
+
+.logo {
+  width: 185px;
+  height: 58px;
+}
+
+.logo .logo-image {
+  object-fit: cover;
+  width: 185px;
+}
+
+.category {
+  margin-top: 6px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding-right: 1.5rem;
+  cursor: pointer;
+  color: white;
+}
+
+.category:hover {
+  color: #F28123;
+}
+
+.navbar-right {
+  padding-right: 0 !important;
+}
+
+.custom-btn {
+  font-size: 1.4rem !important;
+  border-radius: 2rem !important;
+  min-width: 115px;
+  height: 3.7rem;
+  color: #fff;
+  font-weight: 500;
+  
+}
+
+.custom-btn:first-child {
+  padding: 8px 0 0 24px;
+  border: 1px solid #4cd137;
+}
+
+.custom-btn:first-child:hover {
+  background-color: #4cd137;
+  border: 1px solid #4cd137;
+}
+
+.custom-btn:nth-child(2) {
+  margin-left: 15px;
+  padding: 8px 0 0 30px; 
+  border: 1px solid #F28123;
+
+}
+
+.custom-btn:nth-child(2):hover {
+  border: 1px solid #F28123;  
+  background-color: #F28123;
+}
+
+.nav-right--user {
+  margin-right: 1rem;
+}
+
+.nav-right--user h5 {
+  font-size: 1.6rem;
+  margin: 6px 0 5px;
+  color: #fff;
+}
+
+.nav-right--user i {
+  margin-left: 15px;
+  font-size: 1.8rem;
+  color: #F28123;
+}
+
+.user-box {
+  background-color: rgba(2, 2, 2, 1);
+  color:#fff;
+  width: 316px;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+#tippy-2 {
+  padding-top: 5px !important;
+}
+
+.user-box--heading, .user-box--heading-title span, 
+.user-box--body .span-header {
+  margin-bottom: 1.5rem;
+}
+
+.user-box--heading {
+  border-bottom: 1px solid #ccc;
+}
+
+.user-box--heading-title span, .user-box--body .span-header {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.user-box--body span {
+  color: #B7B7B7;
+}
+
+.user-box--heading-title img {
+  width: 35px;
+  height: 29px;
+}
+
+.point img {
+  height: 28px;
+  width: 28px;
+}
+.point span {
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding-left: 10px;
+}
+
+.add-point {
+  background: #f2ec4b;
+  border-radius: 4px;
+  padding: 3px 5px 0 10px;
+}
+
+.add-point:hover {
+  transform: scale(1.01);
+  opacity: 0.8;
+}
+
+.add-point span {
+  padding-right: 1rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #040404;
+}
+
+.add-point img {
+  height: 25px;
+  width: 28px;
+  margin-bottom: 4px;
+}
+
+.user-box--footer a img {
+  height: 32px;
+  width: 32px;
+  margin-right: 20px;
+  position: relative;
+}
+
+.user-box--footer a img:first-child {
+  left: -6px;
+}
+
+.user-box--footer a img:nth-child(2) {
+  left: -2px;
+}
+
+.user-box--footer a {
+  font-size: 1.6rem;
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.user-box--footer a:hover {
+  color: #f2ec4b;
+  transform: scale(1.01);
+}
+
+.user-box--footer a:nth-child(2) {
+  margin-left: 4px;
+}
+
+
+.user-box--footer a:nth-child(3) {
+  margin-left: 6px;
+}

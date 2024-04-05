@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: 1rem 1.5rem;
+  background-color: black;
+  align-items: center;
+  justify-content: space-between;
+  color: #ffffff;
+  font-size: 3rem;
+  font-family: inherit;
+  font-weight: 800;
+  a:hover {
+    cursor: pointer;
+  }
+  .logo {
+    padding-bottom: 2rem;
+    img {
+      width: 20rem;
+    }
+  }
+  .btns {
+    font-size: 1.5rem;
+    display: flex;
+    gap: 2rem;
+    button {
+      padding: 1rem 1.3rem;
+      border-radius: 2rem;
+    }
+  }
+  .user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 2rem;
+    min-width: 40rem;
+    cursor: pointer;
+    img {
+      display: block;
+      width: 5rem;
+    }
+  }
+}

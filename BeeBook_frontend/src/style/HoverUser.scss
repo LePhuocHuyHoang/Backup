@@ -1,0 +1,130 @@
+.HoverCardContent {
+  border-radius: 6px;
+  padding: 20px;
+  padding-right: 5rem;
+  background-color: white;
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 0.5, 0.25, 0.5);
+  will-change: transform, opacity;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: fit-content;
+
+  max-height: 50rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 3rem;
+  font-weight: 500;
+  a {
+    font-size: inherit;
+  }
+  p {
+    transition: all 0.25s ease-in-out;
+  }
+
+  .user-menu {
+    transition: all 0.25s ease-in-out;
+    li:hover {
+      cursor: pointer;
+      color: orange;
+      transform: translateY(-0.3rem);
+    }
+    li {
+      font-size: 3rem !important;
+      min-width: 20rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      justify-content: space-between;
+      margin: 1rem 0;
+      div {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+      img {
+        width: 3rem;
+      }
+      .num-point {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        p {
+          font-size: 2rem !important;
+        }
+        img {
+          display: block;
+          width: 4rem;
+        }
+      }
+      .add-point {
+        padding: 1rem;
+        background-color: rgb(255, 183, 0);
+        border-radius: 2rem;
+        color: white;
+      }
+    }
+  }
+}
+.HoverCardArrow {
+  fill: white;
+}
+.HoverCardContent[data-side="top"] {
+  animation-name: slideDownAndFade;
+}
+.HoverCardContent[data-side="right"] {
+  animation-name: slideLeftAndFade;
+}
+.HoverCardContent[data-side="bottom"] {
+  animation-name: slideUpAndFade;
+}
+.HoverCardContent[data-side="left"] {
+  animation-name: slideRightAndFade;
+}
+@keyframes slideUpAndFade {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideRightAndFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDownAndFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeftAndFade {
+  0% {
+    opacity: 0;
+    transform: translateX(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

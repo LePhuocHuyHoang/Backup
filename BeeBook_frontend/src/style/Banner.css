@@ -1,0 +1,107 @@
+.banner {
+  background-color: rgba(60, 56, 56, 1);
+  height: 557px;
+}
+
+.banner-image {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.banner-text {
+  position: relative;
+  z-index: 10;
+  top: -365px;
+  left: 74px;
+  width: 500px;
+}
+
+.banner-text .banner-text--title {
+  color: #fff;
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.banner-text .banner-text--subtitle {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.banner-text .banner-text--button {
+  min-width: 115px;
+  border-radius: 2rem;
+  height: 3.7rem;
+  background-color: #f28123;
+  border: none;
+}
+
+.banner-text .banner-text--button a:hover {
+  opacity: 0.8;
+  color: red;
+}
+
+.banner-text .banner-text--button a {
+  color: #0f0f0e;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.banner-text .banner-text--title,
+.banner-text .banner-text--subtitle,
+.banner-text .banner-text--button {
+  letter-spacing: 0;
+  line-height: normal;
+  margin-bottom: 25px;
+}
+
+.banner-right {
+  position: relative;
+  float: right;
+  top: -100%;
+  left: -60px;
+}
+
+.banner-right .ellipse {
+  background-color: #ab9e9e;
+  top: 0;
+}
+
+.banner-right .ellipse-1 {
+  background-color: #ab9e9e;
+  top: 20px;
+}
+
+.banner-right .ellipse-2 {
+  background-color: #ab9e9e;
+  top: 45px;
+}
+
+.banner-right .ellipse-3 {
+  background-color: #ab9e9e;
+  top: 70px;
+}
+
+.banner-right .ellipse-4 {
+  background-color: #ab9e9e;
+  top: 95px;
+}
+
+.banner-right .ellipse-5 {
+  background-color: #e7f17c;
+  top: 120px;
+}
+
+.banner-right .ellipse,
+.banner-right .ellipse-1,
+.banner-right .ellipse-2,
+.banner-right .ellipse-3,
+.banner-right .ellipse-4,
+.banner-right .ellipse-5 {
+  border-radius: 5px;
+  height: 10px;
+  position: absolute;
+  width: 10px;
+  left: 0;
+}

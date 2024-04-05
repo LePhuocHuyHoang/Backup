@@ -1,0 +1,256 @@
+.detail-background {
+    background-color: rgba(97,93,92,0.85);
+}
+
+.detail-background  img {
+    position: relative;
+    z-index: -10;
+}
+
+.book-image {
+    height: 355px;
+    width: 230px;
+    margin-right: 30px;
+}
+
+.detail-book--header {
+    position: absolute;
+    top: 140px;
+    left: 145px;
+}
+
+.book-text .book-text--first h5 {
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.action, .book-text--second, .book-text .book-text--first h5 {
+    margin-bottom: 40px;
+}
+
+.page-action, .comment-action, .report-action {
+    color: white;
+}
+
+.page-action i, .comment-action i, .report-action i {
+    font-size: 3.4rem;
+    margin-right: 15px;
+}
+
+.page-action, .comment-action {
+    margin-right: 60px;
+}
+
+.action p {
+    margin-bottom: 0;
+    font-size: 2.4rem;
+}
+
+.action-text--first {
+    color: #f2ec4b;
+    margin-right: 15px;
+}
+
+.report-action button {
+    background: transparent;
+    border: none;
+}
+
+.report-action button i {
+    color: #f2ec4b;
+}
+
+.report-action button i:hover {
+    color: linear-gradient(to right, #f5ce62, #e43603, #fa7199, #e85a19);
+    box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
+    border: none;
+    animation: fadeIn 2s ease-in;
+    border-radius: 50%;
+}
+
+@keyframes fadeIn {
+    from {
+      opacity: 0.6;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+.book-text--second button {
+    width: 172px;
+    height: 52px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.book-text--second .first-btn {
+    background-color: #f8ef08;
+    border: none;
+    margin-right: 50px;
+}
+
+.book-text--second .first-btn a {
+    color: #0f0f0f;
+    font-size: 1.6rem;
+}
+
+.book-text--second .first-btn:hover {
+    animation: fadeIn 2s ease-in; 
+}
+
+.book-text--second .second-btn {
+    background-color: transparent;
+    border: 1px solid #F9EF09;
+}
+
+.book-text--second .second-btn a {
+    color: #FFFDFD;
+    font-size: 1.6rem;
+}
+
+.book-text--second .second-btn:hover {
+    background-image: linear-gradient(to right, #f5ce62, #e43603, #fa7199, #e85a19);
+    box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
+    border: none;
+    animation: fadeIn 2s ease-in; 
+}
+
+.book-text--third h5, p {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.book-text--third h5 {
+    color: #b2bec3;
+}
+
+.book-text--third p {
+    color: #fffefd;
+    
+    margin-left: 6px;
+}
+
+.book-tab {
+    font-size: 1.6rem;
+    background-color: #2e2c2c;
+    padding-top: 2rem;
+}
+
+.sub-tab {
+    background: #3c3838;
+}
+
+.book-review--tab-container {
+    width: 880px;
+    background: #504C4C;
+    border-radius: 20px;
+    margin: 0 auto;
+    padding: 20px 40px;
+}
+
+.book-comment--tab-container {
+    width: 700px;
+    background: #504C4C;
+    border-radius: 20px;
+    margin: 0 auto;
+    padding: 20px 40px;
+}
+
+.book-review--tab-container h5 {
+    font-size: 2.2rem;
+    color:#fff;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.book-review--tab-container p {
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: #fff;
+}
+
+#uncontrolled-tab-example-tabpane-home, #uncontrolled-tab-example-tabpane-comment {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+}
+
+.form-group i, .form-group input, .show-comment--first i {
+    font-size: 1.8rem;
+    color: #F28123;
+    margin-right: 20px;
+    
+}
+
+.form-group .fa-user {
+    margin-left: 20px;
+}
+
+.form-group input  {
+    background-color: #012738;
+    color: #fff;
+    border: none;
+    border-radius: 2rem;
+    height: 3.7rem;
+    width: 450px;
+    font-size: 1.4rem;
+    font-weight: 400;
+    outline-style: none;
+    padding-left: 20px;
+}
+
+.form-group input::placeholder {
+    color: white;
+    font-weight: 400;
+    background-color: transparent;
+}
+
+.form-group input:focus {
+    color: white;
+}
+
+.form-group button {
+    background-color: transparent;
+    border: none;
+}
+
+.show-comment--first-text {
+    background-color: #012738;
+    color: #fff;
+    border: none;
+    border-radius: 2rem;
+    width: 450px;
+    font-size: 1.4rem;
+    font-weight: 400;
+    outline-style: none;
+    padding: 15px 20px 0;
+    min-height: 98px;
+}
+
+.show-comment--first-text h5 {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: 700;
+
+}
+
+.show-comment--first-text p {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+
+.show-comment {
+    margin-left: 35px;
+}
+
+.show-comment--second  {
+    width: 450px;
+    margin-left: 42px
+}
+
+.footer-comment--left,.footer-comment--right span  {
+    font-size: 1.4rem;
+    color: #fff;
+}

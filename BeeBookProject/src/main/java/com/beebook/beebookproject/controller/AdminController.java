@@ -2,6 +2,7 @@ package com.beebook.beebookproject.controller;
 
 import com.beebook.beebookproject.common.util.AppConstants;
 import com.beebook.beebookproject.common.util.AppUtils;
+import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.payloads.*;
 import com.beebook.beebookproject.payloads.request.AuthorRequest;
 import com.beebook.beebookproject.payloads.request.BookRequest;
@@ -9,9 +10,12 @@ import com.beebook.beebookproject.payloads.request.TypeRequest;
 import com.beebook.beebookproject.service.AuthorService;
 import com.beebook.beebookproject.service.BookService;
 import com.beebook.beebookproject.service.TypeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -88,5 +92,21 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse> deleteBook(@RequestParam(name = "bookId") Long bookId) {
         return bookService.deleteBook(bookId);
+    }
+    @GetMapping("/book/search")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<SearchDTO>> searchBook(@RequestParam(name = "keyword") String keyword) {
+        List<SearchDTO> books = bookService.searchBook(keyword);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+    @GetMapping("/type/search")
+    public ResponseEntity<List<SearchDTO>> searchType(@RequestParam(name = "keyword") String keyword) {
+        List<SearchDTO> types = typeService.searchType(keyword);
+        return new ResponseEntity<>(types, HttpStatus.OK);
+    }
+    @GetMapping("/author/search")
+    public ResponseEntity<List<SearchDTO>> searchAuthor(@RequestParam(name = "keyword") String keyword) {
+        List<SearchDTO> authors = authorService.searchAuthor(keyword);
+        return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 }

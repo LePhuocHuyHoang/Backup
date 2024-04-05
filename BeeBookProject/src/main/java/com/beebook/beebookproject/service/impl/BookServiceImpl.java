@@ -122,6 +122,7 @@ public class BookServiceImpl implements BookService {
             }
 
             Book book = bookRequest.toBook();
+            bookRepository.save(book);
             bookRepository.addAuthorBook(bookRequest.getAuthorName(), book.getId());
             bookRepository.addBookType(bookRequest.getTypeName(), book.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(bookRequest);
