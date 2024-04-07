@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from '@mui/material';
 import AddNewAuthor from './AddNewAuthor';
+import dayjs from 'dayjs';
 
 const style = {
     position: 'absolute',
@@ -105,8 +106,15 @@ export default function ManageAuthor() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log(data.content[0].content);
-            setAuthors(data.content[0].content);
+
+            // Chuyển đổi định dạng ngày tháng của dob (ngày sinh của tác giả)
+            const authors = data.content[0].content.map((author) => ({
+                ...author,
+                dob: dayjs(author.dob).format('YYYY-MM-DD'),
+            }));
+
+            console.log(authors);
+            setAuthors(authors);
             setTotalPages(data.content[0].totalPages);
         } catch (error) {
             console.error('Error fetching data:', error);

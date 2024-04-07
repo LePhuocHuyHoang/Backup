@@ -71,9 +71,11 @@ const AddNewAuthor = ({ handleAddAuthorSuccess, handleClose }) => {
         const name = event.target.value;
 
         if (!name || name.trim() === '') {
-            setError('Tên sách không được để trống');
-        } else if (name.length > 500) {
-            setError(`Tên sách phải nằm trong khoảng từ 0 đến 500 ký tự`);
+            setError('Tên tác giả không được để trống');
+        } else if (name.length > 255) {
+            setError(`Tên tác giả phải nằm trong khoảng từ 0 đến 255 ký tự`);
+            setName(name.substring(0, 255));
+            return;
         } else {
             setError('');
         }
@@ -86,7 +88,19 @@ const AddNewAuthor = ({ handleAddAuthorSuccess, handleClose }) => {
     };
 
     const handleIntroduceChange = (event) => {
-        setBio(event.target.value);
+        const introduce = event.target.value;
+
+        if (!introduce || introduce.trim() === '') {
+            setError('Giới thiệu không được để trống');
+        } else if (introduce.length > 255) {
+            setError('Giới thiệu không được vượt quá 255 ký tự');
+            setBio(introduce.substring(0, 255));
+            return;
+        } else {
+            setError('');
+        }
+
+        setBio(introduce);
     };
 
     const handleSubmit = async (event) => {
@@ -98,12 +112,6 @@ const AddNewAuthor = ({ handleAddAuthorSuccess, handleClose }) => {
             dob: dayjs(formData.get('dob')).format('YYYY-MM-DD'),
             bio: bio,
         };
-
-        // Kiểm tra độ dài của trường giới thiệu
-        if (inputData.bio.length > 500) {
-            setError('Giới thiệu về tác giả phải ít hơn hoặc bằng 500 ký tự');
-            return; // Dừng việc submit nếu trường giới thiệu quá dài
-        }
 
         const dobPattern = /^\d{4}-\d{2}-\d{2}$/;
         if (!dobPattern.test(inputData.dob)) {

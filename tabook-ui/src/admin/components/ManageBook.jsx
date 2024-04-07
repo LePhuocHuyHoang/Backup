@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import AddNewBook from './AddNewBook';
 import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from '@mui/material';
+import dayjs from 'dayjs';
 
 const style = {
     position: 'absolute',
@@ -98,8 +99,14 @@ export default function ManageBook() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log(data.content[0].content);
-            setBooks(data.content[0].content);
+
+            const books = data.content[0].content.map((book) => ({
+                ...book,
+                publicationYear: dayjs(book.publicationYear).format('YYYY-MM-DD'),
+            }));
+
+            console.log(books);
+            setBooks(books);
             setTotalPages(data.content[0].totalPages);
         } catch (error) {
             console.error('Error fetching data:', error);

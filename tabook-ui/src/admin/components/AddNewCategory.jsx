@@ -79,9 +79,11 @@ const AddNewCategory = ({ handleAddCategorySuccess, handleClose }) => {
         const name = event.target.value;
 
         if (!name || name.trim() === '') {
-            setError('Tên sách không được để trống');
-        } else if (name.length > 500) {
-            setError(`Tên sách phải nằm trong khoảng từ 0 đến 500 ký tự`);
+            setError('Tên thể loại không được để trống');
+        } else if (name.length > 255) {
+            setError(`Tên thể loại phải nằm trong khoảng từ 0 đến 255 ký tự`);
+            setName(name.substring(0, 255));
+            return;
         } else {
             setError('');
         }
@@ -90,7 +92,19 @@ const AddNewCategory = ({ handleAddCategorySuccess, handleClose }) => {
     };
 
     const handleDescriptionChange = (event) => {
-        setDescription(event.target.value);
+        const description = event.target.value;
+
+        if (!description || description.trim() === '') {
+            setError('Mô tả không được để trống');
+        } else if (description.length > 255) {
+            setError('Mô tả phải nằm trong khoảng từ 0 đến 255 ký tự');
+            setDescription(description.substring(0, 255));
+            return;
+        } else {
+            setError('');
+        }
+
+        setDescription(description);
     };
 
     const handleSubmit = async (event) => {

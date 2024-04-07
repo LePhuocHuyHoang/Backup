@@ -7,6 +7,12 @@ import { styled } from '@mui/system';
 import axios from 'axios';
 import { type } from '@testing-library/user-event/dist/type';
 
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { setYear } from 'date-fns';
+
 const blue = {
     100: '#DAECFF',
     200: '#b6daff',
@@ -62,7 +68,7 @@ const Textarea = styled(BaseTextareaAutosize)(
 );
 
 const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
-    const [publicationYear, setPublicationYear] = useState('');
+    const [publicationYear, setPublicationYear] = useState(new Date());
     const [name, setName] = useState('');
     const [totalPages, setTotalPages] = useState('');
     const [publisher, setPublisher] = useState('');
@@ -112,17 +118,6 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
     }, []);
 
     const handlePublicationYearChange = (event) => {
-        const year = parseInt(event.target.value);
-        const currentYear = new Date().getFullYear();
-
-        if (year <= 0) {
-            setError('Năm xuất bản phải lớn hơn 0');
-        } else if (year < 1975 || year > currentYear) {
-            setError(`Năm xuất bản phải nằm trong khoảng từ 1975 đến ${currentYear}`);
-        } else {
-            setError('');
-        }
-
         setPublicationYear(event.target.value);
     };
 
@@ -131,8 +126,10 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
 
         if (!name || name.trim() === '') {
             setError('Tên sách không được để trống');
-        } else if (name.length > 500) {
-            setError(`Tên sách phải nằm trong khoảng từ 0 đến 500 ký tự`);
+        } else if (name.length > 255) {
+            setError(`Tên sách phải nằm trong khoảng từ 0 đến 255 ký tự`);
+            setName(name.substring(0, 255));
+            return;
         } else {
             setError('');
         }
@@ -145,6 +142,10 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
 
         if (!value.trim()) {
             setError('File Source không được để trống');
+        } else if (value.length > 255) {
+            setError(`File Source phải nằm trong khoảng từ 0 đến 255 ký tự`);
+            setFileSource(value.substring(0, 255));
+            return;
         } else {
             setError('');
         }
@@ -157,8 +158,10 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
 
         if (!name || name.trim() === '') {
             setError('Nhà xuất bản không được để trống');
-        } else if (name.length > 500) {
-            setError(`Nhà xuất bản phải nằm trong khoảng từ 0 đến 500 ký tự`);
+        } else if (name.length > 255) {
+            setError(`Nhà xuất bản phải nằm trong khoảng từ 0 đến 255 ký tự`);
+            setPublisher(name.substring(0, 255));
+            return;
         } else {
             setError('');
         }
@@ -170,8 +173,12 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
         const totalPage = parseInt(event.target.value);
         if (totalPage <= 0) {
             setError('Tổng số trang phải lớn hơn 0');
+            setTotalPages(1);
+            return;
         } else if (totalPage > 1000) {
             setError(`Tổng số trang phải lớn hơn 1 và bé hơn hoặc bằng 1000`);
+            setTotalPages(1000);
+            return;
         } else {
             setError('');
         }
@@ -180,16 +187,21 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
 
     const handleIbsnChange = (event) => {
         const ibsn = event.target.value;
-
         if (!ibsn || ibsn.trim() === '') {
             setError('IBSN không được để trống');
-        } else if (ibsn.length > 500) {
-            setError(`IBSN phải nằm trong khoảng từ 0 đến 500 ký tự`);
+        } else if (ibsn.length > 13) {
+            setError('IBSN phải nằm trong khoảng từ 0 đến 13 ký tự');
+            setIbsn(ibsn.substring(0, 13));
+            return;
+        } else if (!/^[0-9]+$/.test(ibsn)) {
+            setError('IBSN chỉ được chứa các ký tự từ 0 đến 9');
+            setIbsn('');
+            return;
         } else {
             setError('');
         }
 
-        setIbsn(event.target.value);
+        setIbsn(ibsn);
     };
 
     const handlePointPriceChange = (event) => {
@@ -198,6 +210,12 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
 
         if (intValue <= 0) {
             setError('Point Price phải là số lớn hơn 0');
+            setPointPrice(1);
+            return;
+        } else if (intValue > 20000) {
+            setError('Point Price không được vượt quá 20000');
+            setPointPrice(20000);
+            return;
         } else if (isNaN(intValue)) {
             setError('Point Price không hợp lệ');
         } else {
@@ -210,8 +228,10 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
     const handleIntroduceChange = (event) => {
         const introduce = event.target.value;
 
-        if (introduce.length > 500) {
-            setError(`Giới thiệu sách phải nằm trong khoảng từ 0 đến 500 ký tự`);
+        if (introduce.length > 1000) {
+            setError(`Giới thiệu sách phải nằm trong khoảng từ 0 đến 1000 ký tự`);
+            setIntroduce(introduce.substring(0, 1000));
+            return;
         } else {
             setError('');
         }
@@ -226,7 +246,7 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
             name: formData.get('name'),
             introduce: formData.get('introduce'),
             ibsn: formData.get('ibsn'),
-            publicationYear: formData.get('publicationYear'),
+            publicationYear: dayjs(formData.get('publicationYear')).format('YYYY-MM-DD'),
             publisher: formData.get('publisher'),
             totalPages: formData.get('totalPages'),
             pointPrice: formData.get('pointPrice'),
@@ -236,6 +256,19 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
             authorName: authorValue ? authorValue.label : '',
             fileSource: formData.get('fileSource'),
         };
+        const publicationYearPattern = /^\d{4}-\d{2}-\d{2}$/;
+        if (!publicationYearPattern.test(inputData.publicationYear)) {
+            setError('Định dạng ngày xuất bản không hợp lệ');
+            return;
+        }
+        const publicationYearDate = new Date(inputData.publicationYear);
+
+        // Kiểm tra xem ngày sinh có nằm trong khoảng thời gian hợp lệ không
+        const currentDate = new Date();
+        if (publicationYearDate >= currentDate) {
+            setError('Ngày xuất bản phải nhỏ hơn ngày hiện tại');
+            return;
+        }
         console.log(inputData);
         try {
             const response = await axios.post('http://localhost:8098/admin/book', inputData, {
@@ -250,7 +283,12 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
             }
         } catch (error) {
             console.error('Error adding book:', error);
-            setError('Failed to add new book');
+            if (error.response && error.response.data) {
+                const errorMessage = error.response.data.message || 'Failed to add new book.';
+                setError(errorMessage);
+            } else {
+                setError('Failed to add new book');
+            }
         }
     };
 
@@ -277,12 +315,11 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
                 <Grid item xs={6}>
                     <TextField
                         required
-                        type="number"
+                        type="date"
                         id="publicationYear"
                         name="publicationYear"
-                        label="Năm xuất bản"
+                        label="Ngày xuất bản"
                         fullWidth
-                        autoComplete="Năm xuất bản"
                         value={publicationYear}
                         onChange={handlePublicationYearChange}
                     />
