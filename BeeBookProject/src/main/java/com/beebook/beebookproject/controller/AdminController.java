@@ -39,10 +39,24 @@ public class AdminController {
 
         return authorService.getAllAuthors(page, size);
     }
+
+    @GetMapping("/author")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> getAuthor(@RequestParam(name = "authorId") Long id) {
+        return authorService.getAuthor(id);
+    }
+
     @PostMapping("/author")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> addAuthor(@RequestBody AuthorRequest authorRequest) {
         return authorService.addAuthor(authorRequest);
+    }
+
+    @PutMapping("/author")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> updateBook(@RequestParam(name = "authorId") Long id,
+                                        @RequestBody AuthorRequest newAuthor) {
+        return authorService.updateAuthor(id,newAuthor);
     }
 
     @DeleteMapping("/author")
@@ -61,10 +75,23 @@ public class AdminController {
         return typeService.getAllTypes(page, size);
     }
 
+    @GetMapping("/type")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> getType(@RequestParam(name = "typeId") Long id) {
+        return typeService.getType(id);
+    }
+
     @PostMapping("/type")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> addType(@RequestBody TypeRequest typeRequest) {
         return typeService.addType(typeRequest);
+    }
+
+    @PutMapping("/type")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> updateType(@RequestParam(name = "typeId") Long id,
+                                        @RequestBody TypeRequest newType) {
+        return typeService.updateType(id,newType);
     }
 
     @DeleteMapping("/type")
@@ -82,10 +109,23 @@ public class AdminController {
         return bookService.getAllBooks(page, size);
     }
 
+    @GetMapping("/book/getBookGuest")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> getBookGuest(@RequestParam(name = "bookId") Long bookId) {
+        return bookService.getBookGuest(bookId);
+    }
+
     @PostMapping("/book")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> addBook(@RequestBody BookRequest bookRequest) {
         return bookService.addBook(bookRequest);
+    }
+
+    @PutMapping("/book")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> updateBook(@RequestParam(name = "bookId") Long id,
+                                        @RequestBody BookRequest newBook) {
+        return bookService.updateBook(id,newBook);
     }
 
     @DeleteMapping("/book")

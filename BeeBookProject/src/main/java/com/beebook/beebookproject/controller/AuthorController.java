@@ -45,7 +45,7 @@ public class AuthorController {
     public ResponseEntity<?> addAuthor(@RequestBody AuthorRequest authorRequest) {
         return authorService.addAuthor(authorRequest);
     }
-    @PutMapping("")
+    @PutMapping()
     public ResponseEntity<?> updateBook(@RequestParam(name = "authorId") Long id,
                                                   @RequestBody AuthorRequest newAuthor) {
         return authorService.updateAuthor(id,newAuthor);

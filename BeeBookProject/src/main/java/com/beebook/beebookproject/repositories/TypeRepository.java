@@ -1,5 +1,6 @@
 package com.beebook.beebookproject.repositories;
 
+import com.beebook.beebookproject.entities.Book;
 import com.beebook.beebookproject.entities.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,4 +25,6 @@ public interface TypeRepository extends JpaRepository<Type,Long>{
     List<Type> searchType(String keyword);
     @Query(value = "EXEC getTop3BestTypes", nativeQuery = true)
     List<Type> getTop3BestTypes();
+
+    Type findByName(String name);
 }

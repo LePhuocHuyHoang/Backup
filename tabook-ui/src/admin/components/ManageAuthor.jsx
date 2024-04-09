@@ -16,6 +16,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from '@mui/material';
+import UpdateAuthor from './UpdateAuthor';
 import AddNewAuthor from './AddNewAuthor';
 import dayjs from 'dayjs';
 
@@ -86,6 +87,8 @@ export default function ManageAuthor() {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
     const [open, setOpen] = React.useState(false);
+    const [showUpdateModal, setShowUpdateModal] = React.useState(false);
+    const [updatingAuthorId, setUpdatingAuthorId] = React.useState(null);
     const [deleteAuthorId, setDeleteAuthorId] = React.useState(null);
 
     const [error, setError] = React.useState('');
@@ -119,6 +122,15 @@ export default function ManageAuthor() {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+    };
+
+    const handleUpdate = (authorId) => {
+        setUpdatingAuthorId(authorId);
+        setShowUpdateModal(true);
+    };
+
+    const handleCloseUpdateModal = () => {
+        setShowUpdateModal(false);
     };
 
     React.useEffect(() => {
@@ -265,13 +277,22 @@ export default function ManageAuthor() {
                                 <TableCell align="left">{!author.bio ? 'NOT FOUND' : author.bio}</TableCell>
                                 <TableCell align="left">{author.dob}</TableCell>
                                 <TableCell align="left">
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        onClick={() => setDeleteAuthorId(author.id)}
-                                    >
-                                        Xoá
-                                    </Button>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '70%' }}>
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleUpdate(author.id)}
+                                        >
+                                            Cập nhật
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() => setDeleteAuthorId(author.id)}
+                                        >
+                                            Xoá
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -308,6 +329,21 @@ export default function ManageAuthor() {
             >
                 <Box sx={style}>
                     <AddNewAuthor handleClose={handleClose} handleAddAuthorSuccess={handleAddAuthorSuccess} />
+                </Box>
+            </Modal>
+
+            <Modal
+                open={showUpdateModal}
+                onClose={handleCloseUpdateModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <UpdateAuthor
+                        handleClose={handleCloseUpdateModal}
+                        handleAddAuthorSuccess={handleAddAuthorSuccess}
+                        authorId={updatingAuthorId}
+                    />
                 </Box>
             </Modal>
 

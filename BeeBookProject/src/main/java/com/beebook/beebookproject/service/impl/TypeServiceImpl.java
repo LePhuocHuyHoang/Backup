@@ -99,6 +99,11 @@ public class TypeServiceImpl implements TypeService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse(false, "Type with the provided ID does not exist."));
         }
+        Type existingTypeWithSameName = typeRepository.findByName(newType.getName());
+        if (existingTypeWithSameName != null && !existingTypeWithSameName.getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Another type with the same name already exists. Cannot update."));
+        }
         Type type = typeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Type", "id", id));
 

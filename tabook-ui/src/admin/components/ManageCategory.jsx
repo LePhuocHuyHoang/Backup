@@ -15,6 +15,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
+import UpdateType from './UpdateType';
 import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from '@mui/material';
 import AddNewCategory from './AddNewCategory';
 
@@ -73,18 +74,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-const handleAddCategorySuccess = () => {
-    // eslint-disable-next-line no-undef
-    fetchCategory();
-    // eslint-disable-next-line no-undef
-    // handleClose();
-};
-
 export default function ManageCategory() {
     const [category, setCategory] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
     const [open, setOpen] = React.useState(false);
+    const [showUpdateModal, setShowUpdateModal] = React.useState(false);
+    const [updatingTypeId, setUpdatingTypeId] = React.useState(null);
     const [deleteCategoryId, setDeleteCategoryId] = React.useState(null);
 
     const [error, setError] = React.useState('');
@@ -112,7 +108,14 @@ export default function ManageCategory() {
             console.error('Error fetching data:', error);
         }
     };
+    const handleUpdate = (typeId) => {
+        setUpdatingTypeId(typeId);
+        setShowUpdateModal(true); // Khi nhấn nút "Cập nhật", hiển thị modal
+    };
 
+    const handleCloseUpdateModal = () => {
+        setShowUpdateModal(false); // Hàm để đóng modal
+    };
     React.useEffect(() => {
         fetchCategory();
     }, [currentPage]);
@@ -255,13 +258,22 @@ export default function ManageCategory() {
                                 </TableCell>
                                 <TableCell align="left">{cate.description}</TableCell>
                                 <TableCell align="left">
-                                    <Button
-                                        variant="outlined"
-                                        color="error"
-                                        onClick={() => setDeleteCategoryId(cate.id)}
-                                    >
-                                        Xoá
-                                    </Button>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '70%' }}>
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleUpdate(cate.id)}
+                                        >
+                                            Cập nhật
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() => setDeleteCategoryId(cate.id)}
+                                        >
+                                            Xoá
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -298,6 +310,21 @@ export default function ManageCategory() {
             >
                 <Box sx={style}>
                     <AddNewCategory handleClose={handleClose} handleAddCategorySuccess={handleAddCategorySuccess} />
+                </Box>
+            </Modal>
+
+            <Modal
+                open={showUpdateModal}
+                onClose={handleCloseUpdateModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <UpdateType
+                        handleClose={handleCloseUpdateModal}
+                        handleAddCategorySuccess={handleAddCategorySuccess}
+                        typeId={updatingTypeId}
+                    />
                 </Box>
             </Modal>
 

@@ -27,4 +27,5 @@ public interface AuthorRepository extends JpaRepository<Author,Long> {
     @Query(value = "EXEC filterAuthor @birthYear= :birthYear, @typeName= :typeName", nativeQuery = true)
     List<Author> filterAuthor(@Param("birthYear") Long birthYear, @Param("typeName") String typeName);
 
+    Author findByName(String name);
 }

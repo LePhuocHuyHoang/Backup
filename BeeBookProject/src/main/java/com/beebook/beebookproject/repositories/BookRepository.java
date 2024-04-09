@@ -89,4 +89,6 @@ public interface BookRepository extends JpaRepository<Book,Long>{
     @Transactional
     @Query(value = "EXEC addBookType :typeName, :bookId", nativeQuery = true)
     void addBookType(@Param("typeName")String typeName, @Param("bookId")long bookId );
+
+    Book findByName(String name);
 }

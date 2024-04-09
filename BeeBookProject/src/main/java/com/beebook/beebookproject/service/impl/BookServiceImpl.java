@@ -144,11 +144,12 @@ public class BookServiceImpl implements BookService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse(false, "Book with the provided ID does not exist."));
         }
-        boolean bookWithSameNameExists = bookRepository.existsByName(newBook.getName());
-        if (bookWithSameNameExists) {
+        Book existingBookWithSameName = bookRepository.findByName(newBook.getName());
+        if (existingBookWithSameName != null && !existingBookWithSameName.getId().equals(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse(false, "Another book with the same name already exists."));
+                    .body(new ApiResponse(false, "Another book with the same name already exists. Cannot update."));
         }
+
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
 
@@ -161,7 +162,9 @@ public class BookServiceImpl implements BookService {
         book.setPointPrice(newBook.getPointPrice());
         book.setFileSource(newBook.getFileSource());
         book.setIsFree(newBook.isFree() ? 1L : 0);
+        book.getAuthors().clear();
         bookRepository.addAuthorBook(newBook.getAuthorName(), book.getId());
+        book.getTypes().clear();
         bookRepository.addBookType(newBook.getTypeName(), book.getId());
         Book updatedBook = bookRepository.save(book);
         BookRequest bookRequest = new BookRequest();

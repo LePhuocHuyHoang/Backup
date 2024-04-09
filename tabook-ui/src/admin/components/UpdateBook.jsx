@@ -67,7 +67,7 @@ const Textarea = styled(BaseTextareaAutosize)(
   `,
 );
 
-const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
+const UpdateBook = ({ handleClose, handleAddBookSuccess, bookId }) => {
     const [publicationYear, setPublicationYear] = useState(new Date());
     const [name, setName] = useState('');
     const [totalPages, setTotalPages] = useState('');
@@ -81,6 +81,36 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
     const [authorValue, setAuthorValue] = useState(null);
     const [typeOptions, setTypeOptions] = useState([]);
     const [authorOptions, setAuthorOptions] = useState([]);
+
+    useEffect(() => {
+        const fetchBookData = async (bookId) => {
+            try {
+                console.log(bookId);
+                const response = await axios.get(`http://localhost:8098/admin/book/getBookGuest?bookId=${bookId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                const bookData = response.data;
+                setName(bookData.name);
+                setPublicationYear(dayjs(bookData.publicationYear).format('YYYY-MM-DD'));
+                setPublisher(bookData.publisher);
+                setIbsn(bookData.ibsn);
+                setTotalPages(bookData.totalPages);
+                setIntroduce(bookData.introduce);
+                setPointPrice(bookData.pointPrice);
+                setTypeValue({ label: bookData.types[0].name });
+                setAuthorValue({ label: bookData.authors[0].name });
+            } catch (error) {
+                console.error('Error fetching book data:', error);
+                setError('Không thể tải thông tin sách để cập nhật');
+            }
+        };
+
+        if (bookId) {
+            fetchBookData(bookId);
+        }
+    }, [bookId]);
 
     useEffect(() => {
         const fetchTypes = async () => {
@@ -270,23 +300,23 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
         }
         console.log(inputData);
         try {
-            const response = await axios.post('http://localhost:8098/admin/book', inputData, {
+            const response = await axios.put(`http://localhost:8098/admin/book?bookId=${bookId}`, inputData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
             if (response) {
-                window.alert('Thêm mới sách thành công!');
+                window.alert('Cập nhật sách thành công!');
                 handleClose();
                 handleAddBookSuccess();
             }
         } catch (error) {
-            console.error('Error adding book:', error);
+            console.error('Error updating book:', error);
             if (error.response && error.response.data) {
-                const errorMessage = error.response.data.message || 'Failed to add new book.';
+                const errorMessage = error.response.data.message || 'Failed to update book.';
                 setError(errorMessage);
             } else {
-                setError('Failed to add new book');
+                setError('Failed to update book');
             }
         }
     };
@@ -422,7 +452,7 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
                         size="large"
                         sx={{ padding: '.8rem 0', bgcolor: '#fcd650', color: 'black' }}
                     >
-                        Lưu lại
+                        Cập nhật
                     </Button>
                 </Grid>
             </Grid>
@@ -430,4 +460,4 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
     );
 };
 
-export default AddNewBook;
+export default UpdateBook;

@@ -16,6 +16,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import AddNewBook from './AddNewBook';
+import UpdateBook from './UpdateBook';
 import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from '@mui/material';
 import dayjs from 'dayjs';
 
@@ -79,6 +80,8 @@ export default function ManageBook() {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
     const [open, setOpen] = React.useState(false);
+    const [showUpdateModal, setShowUpdateModal] = React.useState(false);
+    const [updatingBook, setUpdatingBook] = React.useState(null);
     const [deleteBookId, setDeleteBookId] = React.useState(null);
 
     const [error, setError] = React.useState('');
@@ -122,6 +125,15 @@ export default function ManageBook() {
     };
 
     const [reloadPage, setReloadPage] = React.useState(false);
+
+    const handleUpdate = (bookId) => {
+        setUpdatingBook(bookId);
+        setShowUpdateModal(true); // Khi nhấn nút "Cập nhật", hiển thị modal
+    };
+
+    const handleCloseUpdateModal = () => {
+        setShowUpdateModal(false); // Hàm để đóng modal
+    };
 
     const handleDelete = async (bookId) => {
         try {
@@ -262,10 +274,23 @@ export default function ManageBook() {
                                 <TableCell align="left">{book.publicationYear}</TableCell>
                                 <TableCell align="left">{book.publisher}</TableCell>
                                 <TableCell align="left">{book.ibsn}</TableCell>
-                                <TableCell align="left">
-                                    <Button variant="outlined" color="error" onClick={() => setDeleteBookId(book.id)}>
-                                        Xoá
-                                    </Button>
+                                <TableCell align="center">
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '70%' }}>
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleUpdate(book.id)}
+                                        >
+                                            Cập nhật
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() => setDeleteBookId(book.id)}
+                                        >
+                                            Xoá
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -302,6 +327,21 @@ export default function ManageBook() {
             >
                 <Box sx={style}>
                     <AddNewBook handleClose={handleClose} handleAddBookSuccess={handleAddBookSuccess} />
+                </Box>
+            </Modal>
+
+            <Modal
+                open={showUpdateModal}
+                onClose={handleCloseUpdateModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <UpdateBook
+                        handleClose={handleCloseUpdateModal}
+                        handleAddBookSuccess={handleAddBookSuccess}
+                        bookId={updatingBook}
+                    />
                 </Box>
             </Modal>
 

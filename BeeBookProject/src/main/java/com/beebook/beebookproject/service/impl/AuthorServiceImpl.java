@@ -3,6 +3,7 @@ package com.beebook.beebookproject.service.impl;
 import com.beebook.beebookproject.common.util.AppUtils;
 import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.entities.Author;
+import com.beebook.beebookproject.entities.Book;
 import com.beebook.beebookproject.exception.AccessDeniedException;
 import com.beebook.beebookproject.exception.ResourceNotFoundException;
 import com.beebook.beebookproject.payloads.ApiResponse;
@@ -97,6 +98,11 @@ public class AuthorServiceImpl implements AuthorService {
         if (!authorExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ApiResponse(false, "Author with the provided ID does not exist."));
+        }
+        Author existingAuthorWithSameName = authorRepository.findByName(newAuthor.getName());
+        if (existingAuthorWithSameName != null && !existingAuthorWithSameName.getId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Another author with the same name already exists. Cannot update."));
         }
         if (newAuthor.getName().isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
