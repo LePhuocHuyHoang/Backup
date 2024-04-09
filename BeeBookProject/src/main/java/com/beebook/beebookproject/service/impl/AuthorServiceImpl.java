@@ -131,14 +131,9 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<SearchDTO> searchAuthor(String keyword) {
+    public List<Author> searchAuthor(String keyword) {
         List<Author> authors = authorRepository.searchAuthor(keyword);
-        List<SearchDTO> searchDTOs = new ArrayList<>();
-        for(Author author : authors){
-            SearchDTO searchDTO = new SearchDTO(author.getId(), author.getName());
-            searchDTOs.add(searchDTO);
-        }
-        return searchDTOs;
+        return authors;
     }
     @Override
     public List<Author> getTop3BestAuthors() {

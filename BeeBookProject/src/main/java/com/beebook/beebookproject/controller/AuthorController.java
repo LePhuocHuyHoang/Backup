@@ -55,8 +55,8 @@ public class AuthorController {
         return authorService.deleteAuthor(authorId);
     }
     @GetMapping("/search")
-    public ResponseEntity<List<SearchDTO>> searchAuthor(@RequestParam(name = "keyword") String keyword) {
-        List<SearchDTO> authors = authorService.searchAuthor(keyword);
+    public ResponseEntity<List<Author>> searchAuthor(@RequestParam(name = "keyword") String keyword) {
+        List<Author> authors = authorService.searchAuthor(keyword);
         return new ResponseEntity<>(authors, HttpStatus.OK);
     }
     @GetMapping("/top3")

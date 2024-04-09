@@ -3,6 +3,9 @@ package com.beebook.beebookproject.controller;
 import com.beebook.beebookproject.common.util.AppConstants;
 import com.beebook.beebookproject.common.util.AppUtils;
 import com.beebook.beebookproject.dto.SearchDTO;
+import com.beebook.beebookproject.entities.Author;
+import com.beebook.beebookproject.entities.Book;
+import com.beebook.beebookproject.entities.Type;
 import com.beebook.beebookproject.payloads.*;
 import com.beebook.beebookproject.payloads.request.AuthorRequest;
 import com.beebook.beebookproject.payloads.request.BookRequest;
@@ -135,18 +138,18 @@ public class AdminController {
     }
     @GetMapping("/book/search")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<SearchDTO>> searchBook(@RequestParam(name = "keyword") String keyword) {
-        List<SearchDTO> books = bookService.searchBook(keyword);
+    public ResponseEntity<List<Book>> searchBookAdmin(@RequestParam(name = "keyword") String keyword) {
+        List<Book> books = bookService.searchBookAdmin(keyword);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
     @GetMapping("/type/search")
-    public ResponseEntity<List<SearchDTO>> searchType(@RequestParam(name = "keyword") String keyword) {
-        List<SearchDTO> types = typeService.searchType(keyword);
+    public ResponseEntity<List<Type>> searchType(@RequestParam(name = "keyword") String keyword) {
+        List<Type> types = typeService.searchType(keyword);
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
     @GetMapping("/author/search")
-    public ResponseEntity<List<SearchDTO>> searchAuthor(@RequestParam(name = "keyword") String keyword) {
-        List<SearchDTO> authors = authorService.searchAuthor(keyword);
+    public ResponseEntity<List<Author>> searchAuthor(@RequestParam(name = "keyword") String keyword) {
+        List<Author> authors = authorService.searchAuthor(keyword);
         return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 }

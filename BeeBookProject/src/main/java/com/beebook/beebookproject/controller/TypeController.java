@@ -54,8 +54,8 @@ public class TypeController {
         return typeService.deleteType(typeId);
     }
     @GetMapping("/search")
-    public ResponseEntity<List<SearchDTO>> searchType(@RequestParam(name = "keyword") String keyword) {
-        List<SearchDTO> types = typeService.searchType(keyword);
+    public ResponseEntity<List<Type>> searchType(@RequestParam(name = "keyword") String keyword) {
+        List<Type> types = typeService.searchType(keyword);
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
     @GetMapping("/top3")

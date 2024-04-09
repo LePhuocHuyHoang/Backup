@@ -126,14 +126,9 @@ public class TypeServiceImpl implements TypeService {
         return ResponseEntity.ok(new ApiResponse(true, "Deleted successfully."));
     }
     @Override
-    public List<SearchDTO> searchType(String keyword) {
+    public List<Type> searchType(String keyword) {
         List<Type> types = typeRepository.searchType(keyword);
-        List<SearchDTO> searchDTOs = new ArrayList<>();
-        for(Type type : types){
-            SearchDTO searchDTO = new SearchDTO(type.getId(), type.getName());
-            searchDTOs.add(searchDTO);
-        }
-        return searchDTOs;
+        return types;
     }
     @Override
     public List<Type> getTop3BestTypes() {

@@ -16,6 +16,6 @@ public interface TypeService {
     ResponseEntity<?> addType(TypeRequest typeRequest);
     ResponseEntity<?> updateType(Long id, TypeRequest newType);
     ResponseEntity<ApiResponse> deleteType(Long typeId);
-    List<SearchDTO> searchType(String keyword);
+    List<Type> searchType(String keyword);
     List<Type> getTop3BestTypes();
 }

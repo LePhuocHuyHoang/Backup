@@ -282,7 +282,7 @@ const UpdateBook = ({ handleClose, handleAddBookSuccess, bookId }) => {
             totalPages: formData.get('totalPages'),
             pointPrice: formData.get('pointPrice'),
             isFree: false,
-            fileSource: bookName ? `/data/book/book_${bookName}` : '',
+            fileSource: bookName ? `/data/book/book_${bookId}` : '',
             typeName: typeValue ? typeValue.label : '',
             authorName: authorValue ? authorValue.label : '',
         };

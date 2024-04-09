@@ -210,7 +210,7 @@ export default function ManageAuthor() {
     const handleSearchSubmit = (event) => {
         event.preventDefault(); // Ngăn chặn việc reload trang khi submit form
         if (!searchKeyword.trim()) {
-            setError('Vui lòng nhập từ khóa tìm kiếm');
+            fetchAuthors();
             return;
         }
 
@@ -262,19 +262,29 @@ export default function ManageAuthor() {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead className="bg-yellow-400">
                         <TableRow>
-                            <TableCell align="left">Tên tác giả</TableCell>
-                            <TableCell align="left">Về tác giả</TableCell>
-                            <TableCell align="left">Ngày sinh</TableCell>
-                            <TableCell align="left">Action</TableCell>
+                            <TableCell align="left" style={{ width: '15%' }}>
+                                Tên tác giả
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '55%' }}>
+                                Về tác giả
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '10%' }}>
+                                Ngày sinh
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '20%' }}>
+                                Action
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {authors.map((author) => (
                             <TableRow key={author.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell component="th" scope="row">
+                                <TableCell component="th" scope="row" sx={{ wordBreak: 'break-word' }}>
                                     {author.name}
                                 </TableCell>
-                                <TableCell align="left">{!author.bio ? 'NOT FOUND' : author.bio}</TableCell>
+                                <TableCell align="left" sx={{ wordBreak: 'break-word' }}>
+                                    {!author.bio ? 'NOT FOUND' : author.bio}
+                                </TableCell>
                                 <TableCell align="left">{author.dob}</TableCell>
                                 <TableCell align="left">
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '70%' }}>

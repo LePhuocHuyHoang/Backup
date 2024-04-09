@@ -67,7 +67,7 @@ const Textarea = styled(BaseTextareaAutosize)(
   `,
 );
 
-const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
+const AddNewBook = ({ handleClose, handleAddBookSuccess, bookId }) => {
     const [publicationYear, setPublicationYear] = useState(new Date());
     const [name, setName] = useState('');
     const [totalPages, setTotalPages] = useState('');
@@ -252,7 +252,7 @@ const AddNewBook = ({ handleClose, handleAddBookSuccess }) => {
             totalPages: formData.get('totalPages'),
             pointPrice: formData.get('pointPrice'),
             isFree: false,
-            fileSource: bookName ? `/data/book/book_${bookName}` : '',
+            fileSource: bookName ? `/data/book/book_${bookId}` : '',
             typeName: typeValue ? typeValue.label : '',
             authorName: authorValue ? authorValue.label : '',
         };

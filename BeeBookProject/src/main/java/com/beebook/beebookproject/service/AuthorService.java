@@ -16,7 +16,7 @@ public interface AuthorService {
     ResponseEntity<?> addAuthor(AuthorRequest authorRequest);
     ResponseEntity<?> updateAuthor(Long id, AuthorRequest newAuthor);
     ResponseEntity<ApiResponse> deleteAuthor(Long id);
-    List<SearchDTO> searchAuthor(String keyword);
+    List<Author> searchAuthor(String keyword);
     List<Author> getTop3BestAuthors();
     List<Author> filterAuthor(Long birthYear, String typeName);
 }

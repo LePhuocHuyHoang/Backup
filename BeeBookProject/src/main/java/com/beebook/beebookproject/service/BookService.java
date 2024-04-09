@@ -26,6 +26,8 @@ public interface BookService {
     ResponseEntity<?> updateBook(Long id, BookRequest newBook);
     List<SearchDTO> searchBook(String keyword);
 
+    List<Book> searchBookAdmin(String keyword);
+
     List<Book> getTop3BookSelling();
 
     List<Book> filterBook(String typeName, String authorName, BigDecimal minPointPrice, BigDecimal maxPointPrice);

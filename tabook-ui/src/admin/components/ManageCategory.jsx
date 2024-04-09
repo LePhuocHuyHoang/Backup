@@ -193,7 +193,7 @@ export default function ManageCategory() {
     const handleSearchSubmit = (event) => {
         event.preventDefault(); // Ngăn chặn việc reload trang khi submit form
         if (!searchKeyword.trim()) {
-            setError('Vui lòng nhập từ khóa tìm kiếm');
+            fetchCategory();
             return;
         }
 
@@ -245,18 +245,26 @@ export default function ManageCategory() {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead className="bg-yellow-400">
                         <TableRow>
-                            <TableCell align="left">Tên thể loại</TableCell>
-                            <TableCell align="left">Mô tả</TableCell>
-                            <TableCell align="left">Action</TableCell>
+                            <TableCell align="left" style={{ width: '20%' }}>
+                                Tên thể loại
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '60%' }}>
+                                Mô tả
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '20%' }}>
+                                Action
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {category.map((cate) => (
                             <TableRow key={cate.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell component="th" scope="row">
+                                <TableCell component="th" scope="row" sx={{ wordBreak: 'break-word' }}>
                                     {cate.name}
                                 </TableCell>
-                                <TableCell align="left">{cate.description}</TableCell>
+                                <TableCell align="left" sx={{ wordBreak: 'break-word' }}>
+                                    {cate.description}
+                                </TableCell>
                                 <TableCell align="left">
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '70%' }}>
                                         <Button

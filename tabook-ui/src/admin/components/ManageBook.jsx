@@ -82,13 +82,17 @@ export default function ManageBook() {
     const [open, setOpen] = React.useState(false);
     const [showUpdateModal, setShowUpdateModal] = React.useState(false);
     const [updatingBook, setUpdatingBook] = React.useState(null);
+    const [addBook, setAddBook] = React.useState(null);
     const [deleteBookId, setDeleteBookId] = React.useState(null);
 
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
     const [searchKeyword, setSearchKeyword] = React.useState('');
 
-    const handleOpen = () => setOpen(true);
+    const handleOpen = (bookId) => {
+        setOpen(true);
+        setAddBook(bookId);
+    };
     const handleClose = () => setOpen(false);
 
     const fetchBooks = async () => {
@@ -189,7 +193,12 @@ export default function ManageBook() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setBooks(data); // Cập nhật books với dữ liệu tìm kiếm mới
+            const formattedBooks = data.map((book) => ({
+                ...book,
+                publicationYear: dayjs(book.publicationYear).format('YYYY-MM-DD'),
+            }));
+
+            setBooks(formattedBooks);
         } catch (error) {
             console.error('Error searching books:', error);
         }
@@ -204,7 +213,7 @@ export default function ManageBook() {
     const handleSearchSubmit = (event) => {
         event.preventDefault(); // Ngăn chặn việc reload trang khi submit form
         if (!searchKeyword.trim()) {
-            setError('Vui lòng nhập từ khóa tìm kiếm');
+            fetchBooks();
             return;
         }
 
@@ -256,23 +265,38 @@ export default function ManageBook() {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead className="bg-yellow-400">
                         <TableRow>
-                            <TableCell align="left">Tên Sách</TableCell>
-                            <TableCell align="left">Point Price</TableCell>
-                            <TableCell align="left">Năm Xuất Bản</TableCell>
-                            <TableCell align="left">Nhà Xuất Bản</TableCell>
-                            <TableCell align="left">IBSN</TableCell>
-                            <TableCell align="left">Action</TableCell>
+                            <TableCell align="left" style={{ width: '30%' }}>
+                                Tên Sách
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '10%' }}>
+                                Point Price
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '10%' }}>
+                                Năm Xuất Bản
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '15%' }}>
+                                Nhà Xuất Bản
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '15%' }}>
+                                IBSN
+                            </TableCell>
+                            <TableCell align="left" style={{ width: '20%' }}>
+                                Action
+                            </TableCell>
                         </TableRow>
                     </TableHead>
+
                     <TableBody>
                         {books.map((book) => (
                             <TableRow key={book.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell component="th" scope="row">
+                                <TableCell component="th" scope="row" sx={{ wordBreak: 'break-word' }}>
                                     {book.name}
                                 </TableCell>
                                 <TableCell align="left">{book.pointPrice}</TableCell>
                                 <TableCell align="left">{book.publicationYear}</TableCell>
-                                <TableCell align="left">{book.publisher}</TableCell>
+                                <TableCell align="left" sx={{ wordBreak: 'break-word' }}>
+                                    {book.publisher}
+                                </TableCell>
                                 <TableCell align="left">{book.ibsn}</TableCell>
                                 <TableCell align="center">
                                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '70%' }}>
@@ -326,7 +350,11 @@ export default function ManageBook() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <AddNewBook handleClose={handleClose} handleAddBookSuccess={handleAddBookSuccess} />
+                    <AddNewBook
+                        handleClose={handleClose}
+                        handleAddBookSuccess={handleAddBookSuccess}
+                        bookId={addBook}
+                    />
                 </Box>
             </Modal>
 

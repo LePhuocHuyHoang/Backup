@@ -29,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -114,7 +115,9 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-
+    private int getActualLength(String str) {
+        return str.getBytes(StandardCharsets.UTF_8).length;
+    }
     @Override
     public ResponseEntity<?> addBook(BookRequest bookRequest) {
         try {
@@ -126,6 +129,9 @@ public class BookServiceImpl implements BookService {
             }
             if(bookRequest.getTotalPages() <= 0 || bookRequest.getPointPrice() <= 0 || bookRequest.getIbsn() <=0 ){
                 throw new AccessDeniedException("Do not set negative values");
+            }
+            if (getActualLength(bookRequest.getName()) > 255) {
+                throw new AccessDeniedException("Book name exceeds maximum length");
             }
             Book book = bookRequest.toBook();
             bookRepository.save(book);
@@ -191,6 +197,13 @@ public class BookServiceImpl implements BookService {
         }
         return searchDTOs;
     }
+
+    @Override
+    public List<Book> searchBookAdmin(String keyword) {
+        List<Book> books = bookRepository.searchBook(keyword);
+        return books;
+    }
+
     @Override
     public List<Book> getTop3BookSelling() {
         return bookRepository.getTop3BookSelling();
