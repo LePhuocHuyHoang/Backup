@@ -8,6 +8,8 @@ import com.beebook.beebookproject.entities.Book;
 import com.beebook.beebookproject.entities.PointTransaction;
 import com.beebook.beebookproject.entities.TransactionType;
 import com.beebook.beebookproject.entities.User;
+import com.beebook.beebookproject.exception.AccessDeniedException;
+import com.beebook.beebookproject.payloads.ApiResponse;
 import com.beebook.beebookproject.repositories.BookRepository;
 import com.beebook.beebookproject.repositories.PointTransactionRepository;
 import com.beebook.beebookproject.repositories.UserRepository;
@@ -18,11 +20,13 @@ import com.stripe.model.*;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.time.YearMonth;
 import java.util.*;
 
 @Service
@@ -43,9 +47,27 @@ public class StripeService {
         Stripe.apiKey = StripeConfig.getStripeApiKey();
     }
 
-    public StripeTokenDto createCardToken(StripeTokenDto model) {
+    public ResponseEntity<?> createCardToken(StripeTokenDto model) {
         Stripe.apiKey = StripeConfig.getStripePublishableKey();
         try {
+            if (!isValidCardNumber(model.getCardNumber())) {
+                throw new IllegalArgumentException("Invalid card number.");
+            }
+            int expMonth = Integer.parseInt(model.getExpMonth());
+            int expYear = Integer.parseInt(model.getExpYear());
+
+            if (expMonth < 1 || expMonth > 12) {
+                throw new IllegalArgumentException("Invalid expiration month. Must be between 01 and 12.");
+            }
+
+            int currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100;
+            int currentMonth = YearMonth.now().getMonthValue();
+            if (expYear < currentYear || (expYear == currentYear && expMonth < currentMonth)) {
+                throw new IllegalArgumentException("Card has expired.");
+            }
+            if (expYear >= 75) {
+                throw new IllegalArgumentException("Card year is invalid.");
+            }
             Map<String, Object> card = new HashMap<>();
             card.put("number", model.getCardNumber());
             card.put("exp_month", Integer.parseInt(model.getExpMonth()));
@@ -58,17 +80,42 @@ public class StripeService {
                 model.setSuccess(true);
                 model.setToken(token.getId());
             }
-            return model;
+            return ResponseEntity.status(HttpStatus.CREATED).body(model);
         } catch (StripeException e) {
             log.error("StripeService (createCardToken)", e);
             throw new RuntimeException(e.getMessage());
+        }catch (IllegalArgumentException e) {
+            ApiResponse apiResponse = new ApiResponse(false, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
         }
 
+
+    }
+    private boolean isValidCardNumber(String cardNumber) {
+
+        int sum = 0;
+        boolean alternate = false;
+        for (int i = cardNumber.length() - 1; i >= 0; i--) {
+            int digit = Character.getNumericValue(cardNumber.charAt(i));
+            if (alternate) {
+                digit *= 2;
+                if (digit > 9) {
+                    digit -= 9;
+                }
+            }
+            sum += digit;
+            alternate = !alternate;
+        }
+        return sum % 10 == 0;
     }
 
-    public StripeChargeDto charge(StripeChargeDto chargeRequest) {
+
+    public ResponseEntity<?> charge(StripeChargeDto chargeRequest) {
         Stripe.apiKey = StripeConfig.getStripeApiKey();
         try {
+            if (chargeRequest.getAmount() < 0) {
+                throw new IllegalArgumentException("Amount must be greater than or equal to 0.");
+            }
             chargeRequest.setSuccess(false);
             String userName = chargeRequest.getUsername();
             Map<String, Object> chargeParams = new HashMap<>();
@@ -98,10 +145,13 @@ public class StripeService {
                 chargeRequest.setChargeId(charge.getId());
                 chargeRequest.setSuccess(true);
             }
-            return chargeRequest;
+            return ResponseEntity.status(HttpStatus.CREATED).body(chargeRequest);
         } catch (StripeException e) {
             log.error("StripeService (charge)", e);
             throw new RuntimeException(e.getMessage());
+        }catch (IllegalArgumentException e) {
+            ApiResponse apiResponse = new ApiResponse(false, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
         }
     }
     public ResponseEntity<?> buy(Long bookId, String username){

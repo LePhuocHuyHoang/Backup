@@ -4,6 +4,8 @@ import axios from "axios";
 import { useAuth } from "../auth/AuthProvider";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+
 function PaymentForm() {
   const [cardNumber, setCardNumber] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -12,18 +14,43 @@ function PaymentForm() {
   const [amount, setAmount] = useState(0);
   const { userProfile, token, handleLogin, handleGetProfile } = useAuth();
   const navigate = useNavigate();
+  const handleCardNumberChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setCardNumber(value);
+  };
+
+  const handleExpDateChange = (e) => {
+    const value = e.target.value.replace(/[^\d/]/g, "");
+    setExpDate(value);
+  };
+
+  const handleCVVChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setCVV(value);
+  };
+  const handleCardNameChange = (e) => {
+    let value = e.target.value;
+    value = value.replace(/[^a-zA-Z\s]/g, "");
+    if (value.length > 30) {
+      value = value.slice(0, 30);
+    }
+    setCardName(value);
+  };
   const handleSubmit = (e) => {
-    // Perform your axios request here
-    // Example:
     e.preventDefault();
     console.log(cardNumber, expDate, CVV, cardName, amount);
+    const [expMonth, expYear] = expDate.split("/");
+    if (amount < 1) {
+      toast.error("Số tiền phải lớn hơn 1");
+      return;
+    }
     axios
       .post(
         "http://localhost:8098/stripe/card/token",
         {
-          cardNumber: "4242424242424242",
-          expMonth: "06",
-          expYear: "25",
+          cardNumber: cardNumber,
+          expMonth: expMonth,
+          expYear: expYear,
           cvc: CVV,
           username: userProfile.userName,
         },
@@ -54,7 +81,7 @@ function PaymentForm() {
       })
       .then((res) => {
         console.log(res);
-        toast.success(`Đã nạp thêm ${res.data.amount * 1000} Point`);
+        toast.success(`Đã nạp thêm ${res.data.amount * 100} Point`);
         handleGetProfile();
         navigate("/");
         window.scrollTo(0, 0);
@@ -63,8 +90,11 @@ function PaymentForm() {
         console.log(err);
         if (err.response?.status === 401) {
           toast.error("Vui lòng đăng nhập!");
+        } else if (err.response?.data?.message) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Đã xảy ra lỗi khi xử lý yêu cầu.");
         }
-        console.error(err.response);
       });
   };
   useEffect(() => {
@@ -86,9 +116,7 @@ function PaymentForm() {
             maxLength={16}
             placeholder="Enter your card number"
             required
-            onChange={(e) => {
-              setCardNumber(e.target.value);
-            }}
+            onChange={handleCardNumberChange}
             value={cardNumber}
           />
         </div>
@@ -101,12 +129,11 @@ function PaymentForm() {
             placeholder="MM/YY"
             maxLength={5}
             required
-            onChange={(e) => {
-              setExpDate(e.target.value);
-            }}
+            onChange={handleExpDateChange}
             value={expDate}
           />
         </div>
+
         <div className="form-group">
           <label htmlFor="cvv">CVV</label>
           <input
@@ -116,9 +143,7 @@ function PaymentForm() {
             maxLength={3}
             placeholder="Enter CVV"
             required
-            onChange={(e) => {
-              setCVV(e.target.value);
-            }}
+            onChange={handleCVVChange}
             value={CVV}
           />
         </div>
@@ -132,9 +157,7 @@ function PaymentForm() {
             required
             value={cardName}
             style={{ textTransform: "uppercase" }}
-            onChange={(e) => {
-              setCardName(e.target.value);
-            }}
+            onChange={handleCardNameChange}
           />
         </div>
         <div className="form-group">

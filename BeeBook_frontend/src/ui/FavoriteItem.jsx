@@ -4,6 +4,17 @@ import { toast } from "react-toastify";
 
 function FavoriteItem({ book, handleRemoveBook }) {
   const [imgStr, setImgStr] = useState("");
+  const [isHovered, setIsHovered] = useState(false);
+  const [displayedName, setDisplayedName] = useState("");
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   useEffect(() => {
     axios
       .get(
@@ -14,12 +25,21 @@ function FavoriteItem({ book, handleRemoveBook }) {
         setImgStr(res.data.data[0].book_cover);
       })
       .catch((err) => console.log(err));
+    if (book.book_name.length > 30) {
+      setDisplayedName(book.book_name.substring(0, 30) + "...");
+    } else {
+      setDisplayedName(book.book_name);
+    }
   }, [book]);
 
   return (
-    <div className="favorite-item">
+    <div
+      className="favorite-item"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <img src={"data:image/png;base64," + imgStr} alt="Image" />
-      <p>{book.book_name}</p>
+      <p>{isHovered ? book.book_name : displayedName}</p>
       {handleRemoveBook && (
         <img
           src="/trash-bin.png"
@@ -29,6 +49,11 @@ function FavoriteItem({ book, handleRemoveBook }) {
         />
       )}
       {!handleRemoveBook && <p>{book.rentalDate}</p>}
+      {isHovered && (
+        <div className="tooltip">
+          <p>{book.book_name}</p>
+        </div>
+      )}
     </div>
   );
 }

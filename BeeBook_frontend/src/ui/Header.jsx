@@ -17,7 +17,7 @@ const Header = () => {
         <img className="logo-image" alt="logo" src="/images/logo.png" />
       </a>
       {/* <HoverBookTypes /> */}
-      <p>Tìm kiếm</p>
+      <p>Tìm kiếm sách</p>
       <Search />
       {!token && (
         <div className="btns">

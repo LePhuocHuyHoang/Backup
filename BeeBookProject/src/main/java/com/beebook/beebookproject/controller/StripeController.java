@@ -41,13 +41,13 @@ public class StripeController {
     @PostMapping("/card/token")
     @ResponseBody
     @PreAuthorize("hasAuthority('USER')")
-    public StripeTokenDto createCardToken(@RequestBody StripeTokenDto model) {
+    public ResponseEntity<?> createCardToken(@RequestBody StripeTokenDto model) {
         return stripeService.createCardToken(model);
     }
 
     @PostMapping("/charge")
     @ResponseBody
-    public StripeChargeDto charge(@RequestBody StripeChargeDto model) {
+    public ResponseEntity<?> charge(@RequestBody StripeChargeDto model) {
         return stripeService.charge(model);
     }
 

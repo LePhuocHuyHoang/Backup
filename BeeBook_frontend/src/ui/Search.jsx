@@ -16,29 +16,38 @@ const Search = () => {
   const navigate = useNavigate();
 
   const searchContainerRef = useRef();
-  const delayedSearch = debounce((term) => {
-    // Thực hiện tìm kiếm ở đây, có thể gọi API hoặc thực hiện logic tìm kiếm khác
-
-    axios
-      .get(SERVER_DOMAIN + "/book/search?keyword=" + searchTerm)
-      .then((res) => {
-        console.log(res.data);
-        setSearchResult(res.data);
-      });
-
-    setSearchPerformed(true);
-  }, 500); // Thời gian chờ debounce, ở đây là 500ms
+  const delayedSearch = useRef(debounce((term) => {}, 500)); // Thời gian chờ debounce, ở đây là 500ms
 
   const handleSearchChange = (event) => {
     const term = event.target.value;
     setSearchTerm(term);
-    if (term.trim() == "") return;
+    if (term.trim() === "") return;
 
     setSearchPerformed(false); // Đặt cờ là false khi người dùng thay đổi ô tìm kiếm
-
-    // Gọi hàm tìm kiếm với debounce
-    delayedSearch(searchTerm);
   };
+
+  useEffect(() => {
+    delayedSearch.current = debounce((term) => {
+      // Thực hiện tìm kiếm ở đây, có thể gọi API hoặc thực hiện logic tìm kiếm khác
+      axios.get(SERVER_DOMAIN + "/book/search?keyword=" + term).then((res) => {
+        console.log(res.data);
+        setSearchResult(res.data);
+        setSearchPerformed(true);
+      });
+    }, 500);
+
+    return () => {
+      delayedSearch.current.cancel(); // Hủy debounce khi component unmounts
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!searchPerformed) {
+      // Gọi hàm tìm kiếm với debounce
+      delayedSearch.current(searchTerm);
+    }
+  }, [searchTerm]);
+
   const handleClickOutside = (event) => {
     if (
       searchContainerRef.current &&
@@ -54,6 +63,7 @@ const Search = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
   return (
     <div className="search-ctn">
       <input
@@ -66,7 +76,7 @@ const Search = () => {
       {isFocused &&
         searchPerformed &&
         searchResult.length === 0 &&
-        searchTerm != "" && (
+        searchTerm !== "" && (
           <ul className="search-result" ref={searchContainerRef}>
             <li>No results found</li>
           </ul>
@@ -75,7 +85,7 @@ const Search = () => {
       {isFocused &&
         searchPerformed &&
         searchResult.length > 0 &&
-        searchTerm != "" && (
+        searchTerm !== "" && (
           <ul className="search-result" ref={searchContainerRef}>
             {searchResult.map((res) => (
               <li

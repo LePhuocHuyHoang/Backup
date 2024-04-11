@@ -59,7 +59,7 @@ const FavoritePage = () => {
   }, [date]);
   return (
     <div className="favorite-ctn">
-      <h2>Yêu thích</h2>
+      <h2>Thống kê sách đã mua</h2>
       <input
         type="month"
         id="start"
@@ -81,9 +81,7 @@ const FavoritePage = () => {
         // below props only if you need pull down functionality
         className="book-ctn"
       >
-        {favBook.length === 0 && (
-          <h4>Không có sách nào trong danh sách yêu thích</h4>
-        )}
+        {favBook.length === 0 && <h4>Chưa có sách nào được mua</h4>}
         {favBook.map((book) => (
           <FavoriteItem book={book} />
         ))}
