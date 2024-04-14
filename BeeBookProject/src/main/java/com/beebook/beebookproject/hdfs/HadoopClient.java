@@ -333,18 +333,21 @@ public class HadoopClient {
         return buffer;
     }
 
-    public List<byte[]> readFilesToImages(String directoryPath) {
-        List<byte[]> imageList = new ArrayList<>();
+    public List<Map<String, Object>> readFilesToImages(String directoryPath) {
+        List<Map<String, Object>> imageList = new ArrayList<>();
         try {
             Path dirPath = new Path(directoryPath);
             if (fs.exists(dirPath) && fs.isDirectory(dirPath)) {
                 // List all files in the directory
                 Path[] files = FileUtil.stat2Paths(fs.listStatus(dirPath));
-                // Read each file and add its content to the list
+                // Read each file and add its content and name to the list
                 for (Path file : files) {
                     byte[] fileData = readFileToByte(fs, file);
                     if (fileData != null) {
-                        imageList.add(fileData);
+                        Map<String, Object> imageInfo = new HashMap<>();
+                        imageInfo.put("name", file.getName()); // Thêm tên của ảnh vào bản đồ
+                        imageInfo.put("data", fileData); // Thêm dữ liệu byte của ảnh vào bản đồ
+                        imageList.add(imageInfo); // Thêm bản đồ vào danh sách
                     }
                 }
             }

@@ -1,11 +1,14 @@
 package com.beebook.beebookproject.controller;
 
+import com.beebook.beebookproject.base.BaseResponse;
 import com.beebook.beebookproject.common.util.AppConstants;
 import com.beebook.beebookproject.common.util.AppUtils;
+import com.beebook.beebookproject.common.util.FileUtil;
 import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.entities.Author;
 import com.beebook.beebookproject.entities.Book;
 import com.beebook.beebookproject.entities.Type;
+import com.beebook.beebookproject.hdfs.HadoopClient;
 import com.beebook.beebookproject.payloads.*;
 import com.beebook.beebookproject.payloads.request.AuthorRequest;
 import com.beebook.beebookproject.payloads.request.BookRequest;
@@ -13,11 +16,14 @@ import com.beebook.beebookproject.payloads.request.TypeRequest;
 import com.beebook.beebookproject.service.AuthorService;
 import com.beebook.beebookproject.service.BookService;
 import com.beebook.beebookproject.service.TypeService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,6 +32,7 @@ public class AdminController {
     private BookService bookService;
     private TypeService typeService;
     private AuthorService authorService;
+    private HadoopClient hadoopClient;
 
     public AdminController(BookService bookService, TypeService typeService, AuthorService authorService) {
         this.bookService = bookService;

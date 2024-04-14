@@ -9,6 +9,7 @@ import { deepOrange, deepPurple } from '@mui/material/colors';
 import ManageBook from '../components/ManageBook';
 import ManageCategory from '../components/ManageCategory';
 import ManageAuthor from '../components/ManageAuthor';
+import ManageInventory from '../components/ManageInventory';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -26,7 +27,7 @@ function CustomTabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
+                <Box sx={{ p: 4 }}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
@@ -186,6 +187,17 @@ export default function Admin() {
                             label="Quản lý tác giả"
                             {...a11yProps(2)}
                         />
+                        <Tab
+                            sx={{
+                                color: 'white',
+                                '&.Mui-selected': {
+                                    color: '#fcd650',
+                                    bgcolor: 'transparent',
+                                },
+                            }}
+                            label="Quản lý kho"
+                            {...a11yProps(3)}
+                        />
                     </Tabs>
                 </div>
                 <div>
@@ -223,6 +235,9 @@ export default function Admin() {
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
                 <ManageAuthor />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+                <ManageInventory />
             </CustomTabPanel>
         </Box>
     );

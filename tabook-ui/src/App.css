@@ -57,3 +57,110 @@
     text-overflow: ellipsis; /* Nếu tên sách quá dài, hiển thị dấu ba chấm ở cuối */
     white-space: nowrap; /* Ngăn chặn nội dung tràn qua nhiều dòng */
 }
+.image-container {
+    max-height: 400px; /* Đặt chiều cao tối đa cho phần tử cha */
+    overflow-y: auto; /* Cho phép thanh cuộn dọc khi nội dung vượt qua chiều cao tối đa */
+}
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+.image-modal {
+    position: fixed;
+    top: 55%;
+    left: 45%;
+    transform: translate(-50%, -53%);
+    z-index: 9999;
+    border-radius: 20px;
+}
+
+.modal-image {
+    max-width: 120%;
+    max-height: 120%;
+    display: block;
+    margin: 0 auto;
+}
+
+.close-icon {
+    position: absolute;
+    top: 20px;
+    right: -70px;
+    color: black;
+    font-size: 24px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: rgb(231, 186, 40);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 5px;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 28px;
+}
+.view-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.view-icon {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 20px;
+    color: rgb(8, 8, 8);
+    cursor: pointer;
+    bottom: -5px;
+}
+
+.image-item:hover .view-icon {
+    opacity: 1;
+}
+.image-item:hover .delete-icon {
+    opacity: 1;
+}
+.delete-icon {
+    cursor: pointer;
+    color: #ff0000; /* Màu đỏ */
+    font-size: 20px; /* Kích thước phù hợp */
+    cursor: pointer;
+    bottom: -5px;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    left: 30px;
+}
+.delete-icon-container {
+    position: relative;
+    display: inline-block;
+}
+.delete-all-button {
+    background-color: #fcd650;
+    color: rgb(16, 15, 15); /* Màu chữ */
+    border: none; /* Loại bỏ đường viền */
+    padding: 10px 20px; /* Kích thước của nút */
+    font-size: 16px; /* Cỡ chữ */
+    cursor: pointer; /* Hình con trỏ khi di chuột vào */
+    border-radius: 5px; /* Đường cong của góc */
+    margin-left: 575px;
+    margin-bottom: 5px;
+}
+
+.delete-all-button:hover {
+    background-color: #fbbf24; /* Màu nền khi di chuột vào */
+}
+
+.delete-all-button:active {
+    background-color: #d5a112; /* Màu nền khi nhấn */
+}
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-text {
+    text-align: center;
+    font-size: 18px;
+}

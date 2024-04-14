@@ -280,7 +280,7 @@ public class FileController {
      */
     @GetMapping("/readFilesToImages")
     public BaseResponse readFilesToImages(@RequestParam String directoryPath) {
-        List<byte[]> imageList = hadoopClient.readFilesToImages(directoryPath);
+        List<Map<String, Object>> imageList = hadoopClient.readFilesToImages(directoryPath);
         if (imageList != null && !imageList.isEmpty()) {
             return BaseResponse.ok(imageList);
         } else {
