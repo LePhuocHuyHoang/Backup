@@ -25,6 +25,7 @@ public class HadoopClient {
     private FileSystem fs;
     private HadoopProperties hadoopProperties;
 
+
     /**
      * Tạo thư mục trong quá trình khởi tạo, tạo nếu chưa tồn tại
      */
@@ -46,7 +47,6 @@ public class HadoopClient {
             return hadoopProperties.getPath();
         }
     }
-
     /**
      * Tạo một thư mục
      *

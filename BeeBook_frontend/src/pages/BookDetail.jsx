@@ -63,7 +63,7 @@ function BookDetail() {
     console.log(book);
     axios
       .post(
-        "http://localhost:8098/user/bookmark/" + book.id,
+        `${SERVER_DOMAIN}/user/bookmark?bookId=${bookId}`,
         { test: "test" },
         {
           headers: {

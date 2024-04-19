@@ -40,7 +40,7 @@ const FavoritePage = () => {
   }, []);
   const handleRemoveBook = (bookId) => {
     axios
-      .delete("http://localhost:8098/user/bookmark/" + bookId, {
+      .delete(`http://localhost:8098/user/bookmark?bookId=${bookId}`, {
         headers: {
           Authorization: "Bearer " + token,
         },

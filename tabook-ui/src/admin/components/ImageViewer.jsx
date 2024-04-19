@@ -6,6 +6,8 @@ const ImageViewer = ({ bookId }) => {
     const [selectedImageIndex, setSelectedImageIndex] = useState(null);
     const [imageOpened, setImageOpened] = useState(false);
     const [loading, setLoading] = useState(true); // Trạng thái loading
+    const [deleteConfirmation, setDeleteConfirmation] = useState(false); // Trạng thái xác nhận xóa ảnh
+    const [deleteAllConfirmation, setDeleteAllConfirmation] = useState(false); // Trạng thái xác nhận xóa tất cả ảnh
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -101,9 +103,32 @@ const ImageViewer = ({ bookId }) => {
         }
     };
 
+    // Hàm xác nhận xóa ảnh
+    const confirmDeleteImage = (index) => {
+        setSelectedImageIndex(index);
+        setDeleteConfirmation(true);
+    };
+
+    // Hàm xác nhận xóa tất cả ảnh
+    const confirmDeleteAllImages = () => {
+        setDeleteAllConfirmation(true);
+    };
+
+    // Hàm xác nhận việc xóa ảnh
+    const handleDeleteConfirmation = async () => {
+        await deleteImage(selectedImageIndex);
+        setDeleteConfirmation(false);
+    };
+
+    // Hàm xác nhận việc xóa tất cả ảnh
+    const handleDeleteAllConfirmation = async () => {
+        await deleteAllImages();
+        setDeleteAllConfirmation(false);
+    };
+
     return (
         <div className="image-container">
-            <button onClick={deleteAllImages} className="delete-all-button">
+            <button onClick={confirmDeleteAllImages} className="delete-all-button">
                 <div className="delete-all-content">
                     <span>Xóa tất cả ảnh</span>
                 </div>
@@ -125,7 +150,7 @@ const ImageViewer = ({ bookId }) => {
                                 {/* Thêm icon và gắn sự kiện onClick */}
                                 <FiEye className="view-icon" />
                             </div>
-                            <div className="delete-icon-container" onClick={() => deleteImage(index)}>
+                            <div className="delete-icon-container" onClick={() => confirmDeleteImage(index)}>
                                 {/* Thêm icon thùng rác và gắn sự kiện onClick */}
                                 <FiTrash2 className="delete-icon" />
                             </div>
@@ -149,6 +174,28 @@ const ImageViewer = ({ bookId }) => {
                         alt={`Book ${selectedImageIndex + 1}`}
                         className="modal-image"
                     />
+                </div>
+            )}
+
+            {/* Hộp thoại xác nhận xóa ảnh */}
+            {deleteConfirmation && (
+                <div className="delete-confirmation-modal">
+                    <div className="delete-confirmation-content">
+                        <p>Bạn có chắc chắn muốn xóa ảnh này?</p>
+                        <button onClick={handleDeleteConfirmation}>Xác nhận</button>
+                        <button onClick={() => setDeleteConfirmation(false)}>Huỷ</button>
+                    </div>
+                </div>
+            )}
+
+            {/* Hộp thoại xác nhận xóa tất cả ảnh */}
+            {deleteAllConfirmation && (
+                <div className="delete-confirmation-modal">
+                    <div className="delete-confirmation-content">
+                        <p>Bạn có chắc chắn muốn xóa tất cả ảnh?</p>
+                        <button onClick={handleDeleteAllConfirmation}>Xác nhận</button>
+                        <button onClick={() => setDeleteAllConfirmation(false)}>Huỷ</button>
+                    </div>
                 </div>
             )}
         </div>

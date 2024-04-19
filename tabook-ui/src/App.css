@@ -164,3 +164,48 @@
     text-align: center;
     font-size: 18px;
 }
+.delete-confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-confirmation-content {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.delete-confirmation-content p {
+    margin-bottom: 20px;
+}
+
+.delete-confirmation-content button {
+    background-color: #fcd650;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 30px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.delete-confirmation-content button:last-child {
+    margin-left: 20px;
+    background-color: #6c757d;
+}
+.delete-confirmation-content button:hover {
+    background-color: #fbbf24; /* Màu nền khi di chuột vào */
+}
+
+.delete-confirmation-content button:active {
+    background-color: #d5a112; /* Màu nền khi nhấn */
+}

@@ -123,8 +123,6 @@ export default function ManageInventory() {
         setCurrentPage(pageNumber);
     };
 
-    const [reloadPage, setReloadPage] = React.useState(false);
-
     const handleView = (bookId) => {
         setViewImgId(bookId);
         setShowViewModal(true);
@@ -139,10 +137,6 @@ export default function ManageInventory() {
     };
     const handleCloseUpdateModal = () => {
         setShowUploadModal(false); // Hàm để đóng modal
-    };
-
-    const handleCloseForm = () => {
-        setUploadSuccess(true); // Đặt cờ thành true khi form được đóng
     };
 
     React.useEffect(() => {
@@ -212,6 +206,7 @@ export default function ManageInventory() {
 
     const handleAddBookSuccess = () => {
         fetchBooks();
+        setUploadSuccess(true);
     };
 
     return (
@@ -342,6 +337,19 @@ export default function ManageInventory() {
             >
                 <Box sx={style}>{viewImgId && <ImageViewer bookId={viewImgId} />}</Box>
             </Modal>
+            {uploadSuccess && (
+                <Snackbar
+                    open={uploadSuccess}
+                    autoHideDuration={3000}
+                    onClose={() => setUploadSuccess(false)}
+                    message="Upload ảnh thành công!"
+                    anchorOrigin={{
+                        vertical: 'top', // Hiển thị ở trên
+                        horizontal: 'right', // Hiển thị ở bên phải
+                    }}
+                    severity="success" // Thiết lập mức độ quan trọng
+                />
+            )}
         </>
     );
 }

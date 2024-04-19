@@ -166,8 +166,8 @@ public class UserController {
 
     }
 
-    @PostMapping("/bookmark/{bookId}")
-    public ResponseEntity<Map<String, String>> addBookToBookmark(@PathVariable Long bookId) {
+    @PostMapping("/bookmark")
+    public ResponseEntity<Map<String, String>> addBookToBookmark(@RequestParam(name = "bookId") Long bookId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Kiểm tra xem người dùng đã đăng nhập chưa
@@ -207,8 +207,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/bookmark/{bookId}")
-    public ResponseEntity<Map<String, String>> removeBookmark(@PathVariable Long bookId) {
+    @DeleteMapping("/bookmark")
+    public ResponseEntity<Map<String, String>> removeBookmark(@RequestParam(name = "bookId") Long bookId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Kiểm tra xem người dùng đã đăng nhập chưa

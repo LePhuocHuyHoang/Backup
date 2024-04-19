@@ -1,5 +1,6 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 
+import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,6 +20,11 @@ import { Alert, Dialog, DialogActions, DialogContent, DialogContentText, DialogT
 import UpdateAuthor from './UpdateAuthor';
 import AddNewAuthor from './AddNewAuthor';
 import dayjs from 'dayjs';
+import Grid from '@mui/material/Grid';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 
 const style = {
     position: 'absolute',
@@ -90,6 +96,10 @@ export default function ManageAuthor() {
     const [showUpdateModal, setShowUpdateModal] = React.useState(false);
     const [updatingAuthorId, setUpdatingAuthorId] = React.useState(null);
     const [deleteAuthorId, setDeleteAuthorId] = React.useState(null);
+    const [birthYear, setBirthYear] = React.useState('');
+    const [typeName, setTypeName] = React.useState('');
+    const [typeOptions, setTypeOptions] = React.useState([]);
+    const [birthYears, setBirthYears] = React.useState([]);
 
     const [error, setError] = React.useState('');
     const [success, setSuccess] = React.useState('');
@@ -115,7 +125,6 @@ export default function ManageAuthor() {
                 ...author,
                 dob: dayjs(author.dob).format('YYYY-MM-DD'),
             }));
-
             console.log(authors);
             setAuthors(authors);
             setTotalPages(data.content[0].totalPages);
@@ -123,6 +132,40 @@ export default function ManageAuthor() {
             console.error('Error fetching data:', error);
         }
     };
+
+    useEffect(() => {
+        const fetchTypes = async () => {
+            try {
+                const response = await axios.get('http://localhost:8098/admin/type/all?size=30', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                const types = response.data.content[0].content;
+                const typeNames = types.map((type) => ({ label: type.name }));
+                setTypeOptions(typeNames);
+            } catch (error) {
+                console.error('Error fetching types:', error);
+            }
+        };
+        const fetchAuthors = async () => {
+            try {
+                const response = await axios.get('http://localhost:8098/admin/author/all?size=30', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                const authors = response.data.content[0].content;
+                const birthYears = [...new Set(authors.map((author) => new Date(author.dob).getFullYear()))];
+                setBirthYears(birthYears);
+            } catch (error) {
+                console.error('Error fetching authors:', error);
+            }
+        };
+
+        fetchTypes();
+        fetchAuthors();
+    }, []);
 
     const handleUpdate = (authorId) => {
         setUpdatingAuthorId(authorId);
@@ -195,9 +238,40 @@ export default function ManageAuthor() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            setAuthors(data); // Cập nhật authors với dữ liệu tìm kiếm mới
+            const formattedAuthors = data.map((author) => ({
+                ...author,
+                dob: dayjs(author.dob).format('YYYY-MM-DD'),
+            }));
+            setTotalPages(1);
+            setAuthors(formattedAuthors);
         } catch (error) {
             console.error('Error searching authors:', error);
+        }
+    };
+
+    const filterAuthors = async () => {
+        // Hàm tìm kiếm dựa trên từ khóa
+        try {
+            const response = await fetch(
+                `http://localhost:8098/author/filter?birthYear=${birthYear}&typeName=${typeName}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                },
+            );
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            const formattedAuthors = data.map((author) => ({
+                ...author,
+                dob: dayjs(author.dob).format('YYYY-MM-DD'),
+            }));
+            setTotalPages(1);
+            setAuthors(formattedAuthors);
+        } catch (error) {
+            console.error('Error filter authors:', error);
         }
     };
 
@@ -226,6 +300,23 @@ export default function ManageAuthor() {
         fetchAuthors();
     };
 
+    const handleTypeNameChange = (event) => {
+        setTypeName(event.target.value);
+    };
+
+    const handleBirthYearChange = (event) => {
+        setBirthYear(event.target.value);
+    };
+
+    const handleFilter = () => {
+        if (birthYear === '' || typeName === '') {
+            setError('Vui lòng điền đầy đủ thông tin cho tất cả các trường.');
+        } else {
+            setError('');
+            filterAuthors();
+        }
+    };
+
     return (
         <>
             <div className="d-flex justify-content-between mb-5">
@@ -242,6 +333,73 @@ export default function ManageAuthor() {
                         />
                     </Search>
                 </form>
+                <div>
+                    <Grid container spacing={2} alignItems="flex-end">
+                        <Grid item xs={12} sm={6} md={6}>
+                            <FormControl fullWidth sx={{ minWidth: 180 }}>
+                                <InputLabel id="type-name-label">Loại sách</InputLabel>
+                                <Select
+                                    labelId="type-name-label"
+                                    id="type-name-select"
+                                    value={typeName}
+                                    label="Loại sách"
+                                    onChange={handleTypeNameChange}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {
+                                                maxHeight: 300,
+                                                width: 250,
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {typeOptions.map((type, index) => (
+                                        <MenuItem key={index} value={type.label}>
+                                            {type.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6}>
+                            <FormControl fullWidth sx={{ minWidth: 150 }}>
+                                <InputLabel id="author-year-label">Năm sinh</InputLabel>
+                                <Select
+                                    labelId="author-year-label"
+                                    id="author-year-select"
+                                    value={birthYear}
+                                    label="Năm sinh"
+                                    onChange={handleBirthYearChange}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            style: {
+                                                maxHeight: 300,
+                                                width: 250,
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    {birthYears.map((year) => (
+                                        <MenuItem key={year} value={year}>
+                                            {year}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6}>
+                            <Button variant="contained" onClick={handleFilter}>
+                                Lọc
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </div>
                 <Stack spacing={2}>{error && <Alert severity="error">{error}</Alert>}</Stack>
                 <Stack spacing={2}>{success && <Alert severity="success">{success}</Alert>}</Stack>
                 <Button
@@ -251,6 +409,8 @@ export default function ManageAuthor() {
                         bgcolor: '#fcd650',
                         color: 'black',
                         '&:hover': { bgcolor: '#fbbf24' },
+                        width: '12%',
+                        height: '39px',
                     }}
                     onClick={handleOpen}
                 >
