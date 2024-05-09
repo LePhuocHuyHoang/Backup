@@ -233,7 +233,7 @@ export default function ManageInventory() {
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead className="bg-yellow-400">
                         <TableRow>
-                            <TableCell align="left" style={{ width: '20%' }}>
+                            <TableCell align="left" style={{ width: '35%' }}>
                                 Tên Sách
                             </TableCell>
                             <TableCell align="left" style={{ width: '10%' }}>
@@ -248,7 +248,7 @@ export default function ManageInventory() {
                             <TableCell align="left" style={{ width: '10%' }}>
                                 IBSN
                             </TableCell>
-                            <TableCell align="left" style={{ width: '40%' }}>
+                            <TableCell align="left" style={{ width: '25%' }}>
                                 Action
                             </TableCell>
                         </TableRow>
@@ -277,14 +277,6 @@ export default function ManageInventory() {
                                         </Button>
                                         <Button variant="outlined" color="primary" onClick={() => handleView(book.id)}>
                                             Xem ảnh
-                                        </Button>
-
-                                        <Button
-                                            variant="outlined"
-                                            color="primary"
-                                            onClick={() => setUploadImgId(book.id)}
-                                        >
-                                            Download ảnh
                                         </Button>
                                     </div>
                                 </TableCell>

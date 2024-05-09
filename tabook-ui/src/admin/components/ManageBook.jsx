@@ -286,7 +286,7 @@ export default function ManageBook() {
     const filterBooks = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8098/book/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&typeName=${typeName}&authorName=${authorName}`,
+                `http://localhost:8098/admin/book/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&typeName=${typeName}&authorName=${authorName}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

@@ -253,7 +253,7 @@ export default function ManageAuthor() {
         // Hàm tìm kiếm dựa trên từ khóa
         try {
             const response = await fetch(
-                `http://localhost:8098/author/filter?birthYear=${birthYear}&typeName=${typeName}`,
+                `http://localhost:8098/admin/author/filter?birthYear=${birthYear}&typeName=${typeName}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

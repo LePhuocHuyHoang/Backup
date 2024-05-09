@@ -23,6 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,13 +151,32 @@ public class AdminController {
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
     @GetMapping("/type/search")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Type>> searchType(@RequestParam(name = "keyword") String keyword) {
         List<Type> types = typeService.searchType(keyword);
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
     @GetMapping("/author/search")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<Author>> searchAuthor(@RequestParam(name = "keyword") String keyword) {
         List<Author> authors = authorService.searchAuthor(keyword);
         return new ResponseEntity<>(authors, HttpStatus.OK);
+    }
+
+    @GetMapping("/author/filter")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<Author>> filterAuthor(@RequestParam(name = "birthYear", required = false) Long birthYear,
+                                                     @RequestParam(name = "typeName", required = false) String typeName) {
+        List<Author> filterAuthor = authorService.filterAuthor(birthYear, typeName);
+        return new ResponseEntity<>(filterAuthor, HttpStatus.OK);
+    }
+    @GetMapping("/book/filter")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<Book>> filterBook(@RequestParam(name = "typeName", required = false) String typeName,
+                                                 @RequestParam(name = "authorName", required = false) String authorName,
+                                                 @RequestParam(name = "minPrice", required = false) BigDecimal minPointPrice,
+                                                 @RequestParam(name = "maxPrice", required = false) BigDecimal maxPointPrice) {
+        List<Book> filterBook = bookService.filterBook(typeName, authorName, minPointPrice, maxPointPrice);
+        return new ResponseEntity<>(filterBook, HttpStatus.OK);
     }
 }

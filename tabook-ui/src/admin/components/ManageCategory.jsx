@@ -178,6 +178,7 @@ export default function ManageCategory() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
+            setTotalPages(1);
             setCategory(data); // Cập nhật authors với dữ liệu tìm kiếm mới
         } catch (error) {
             console.error('Error searching authors:', error);
