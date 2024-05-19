@@ -115,12 +115,6 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         return realm1.users();
     }
 
-    @Override
-    public UserRepresentation getUserById(String userId) {
-
-
-        return getUsersResource().get(userId).toRepresentation();
-    }
 
     @Override
     public ResponseEntity<?> deleteUserById(String userId) {
@@ -164,14 +158,6 @@ public class KeycloakUserServiceImpl implements KeycloakUserService {
         return rolesResource.get(role).toRepresentation();
     }
 
-
-
-    private void assignRoleToUser(String userId, String role) {
-        UsersResource usersResource = getUsersResource();
-        UserResource userResource = usersResource.get(userId);
-        RoleRepresentation roleRepresentation = getRole(role);
-        userResource.roles().realmLevel().add(Collections.singletonList(roleRepresentation));
-    }
 
     private RolesResource getRolesResource() {
         RealmResource realm1 = keycloak.realm(realm);

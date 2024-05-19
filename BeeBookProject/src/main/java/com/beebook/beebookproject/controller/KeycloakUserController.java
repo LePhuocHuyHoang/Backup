@@ -31,26 +31,11 @@ public class KeycloakUserController {
         return "Hello";
     }
 
-//    @PostMapping
-//    public UserRegistrationRecord createUser(@RequestBody UserRegistrationDto createUser) {
-//        //Lưu vào CSDL
-//        userService.save(createUser);
-//        UserRegistrationRecord userRegistrationRecord = new UserRegistrationRecord(createUser.getUsername(),
-//                createUser.getUsername(),createUser.getFirstName(),createUser.getLastName(),createUser.getPassword(),false);
-//        return keycloakUserService.createUser(userRegistrationRecord);
-//    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationRecord userRegistrationRecord) {
         return keycloakUserService.createUser(userRegistrationRecord);
     }
-
-//    @GetMapping("/{userId}")
-//    @PreAuthorize("hasAuthority('USER')")
-//    public UserRepresentation getUserById(@PathVariable String userId) {
-//
-//        return keycloakUserService.getUserById(userId);
-//    }
 
     @DeleteMapping("/{userName}")
     @PreAuthorize("hasAuthority('USER')")
@@ -68,14 +53,11 @@ public class KeycloakUserController {
         String userId = null;
         if (authentication != null && authentication.getPrincipal() != null) {
             if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt) {
-//                org.springframework.security.oauth2.jwt.Jwt jwtToken = (org.springframework.security.oauth2.jwt.Jwt) authentication.getPrincipal();
                 userId = jwtToken.getClaimAsString("sub");
             }
         }
         return keycloakUserService.deleteUserById(userId);
     }
-
-
 
     @PutMapping("/{userId}/send-verify-email")
     @PreAuthorize("hasAuthority('USER')")

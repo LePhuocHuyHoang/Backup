@@ -70,7 +70,11 @@ const FavoritePage = () => {
           <h4>Không có sách nào trong danh sách yêu thích</h4>
         )}
         {favBook.map((book) => (
-          <FavoriteItem book={book} handleRemoveBook={handleRemoveBook} />
+          <FavoriteItem
+            book={book}
+            handleRemoveBook={handleRemoveBook}
+            key={book.book_id}
+          />
         ))}
       </InfiniteScroll>
     </div>

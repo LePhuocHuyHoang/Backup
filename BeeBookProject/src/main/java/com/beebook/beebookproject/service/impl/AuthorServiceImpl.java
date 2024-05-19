@@ -1,9 +1,7 @@
 package com.beebook.beebookproject.service.impl;
 
 import com.beebook.beebookproject.common.util.AppUtils;
-import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.entities.Author;
-import com.beebook.beebookproject.entities.Book;
 import com.beebook.beebookproject.exception.AccessDeniedException;
 import com.beebook.beebookproject.exception.ResourceNotFoundException;
 import com.beebook.beebookproject.payloads.ApiResponse;
@@ -134,10 +132,6 @@ public class AuthorServiceImpl implements AuthorService {
     public List<Author> searchAuthor(String keyword) {
         List<Author> authors = authorRepository.searchAuthor(keyword);
         return authors;
-    }
-    @Override
-    public List<Author> getTop3BestAuthors() {
-        return authorRepository.getTop3BestAuthors();
     }
     @Override
     public List<Author> filterAuthor(Long birthYear, String typeName) {

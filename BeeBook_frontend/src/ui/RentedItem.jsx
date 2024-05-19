@@ -36,7 +36,7 @@ function FavoriteItem({ book, handleRemoveBook }) {
 
   // Function to handle clicking on the book item
   const handleClick = () => {
-    navigate(`/book/${book.book_id}`); // Navigate to the book detail page
+    navigate(`/read/${book.book_id}`); // Navigate to the read book page
   };
 
   return (

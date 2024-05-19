@@ -1,6 +1,5 @@
 package com.beebook.beebookproject.service;
 
-import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.entities.Author;
 import com.beebook.beebookproject.payloads.ApiResponse;
 import com.beebook.beebookproject.payloads.AuthorRespone;
@@ -17,6 +16,5 @@ public interface AuthorService {
     ResponseEntity<?> updateAuthor(Long id, AuthorRequest newAuthor);
     ResponseEntity<ApiResponse> deleteAuthor(Long id);
     List<Author> searchAuthor(String keyword);
-    List<Author> getTop3BestAuthors();
     List<Author> filterAuthor(Long birthYear, String typeName);
 }

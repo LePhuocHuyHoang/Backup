@@ -28,9 +28,9 @@ public class PagedResponse<T> {
 		this.last = last;
 	}
 
-	public List<T> getContent() {
-		return content == null ? null : new ArrayList<>(content);
-	}
+//	public List<T> getContent() {
+//		return content == null ? null : new ArrayList<>(content);
+//	}
 
 	public final void setContent(List<T> content) {
 		if (content == null) {

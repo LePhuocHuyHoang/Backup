@@ -13,17 +13,4 @@ public class BookDTO {
     private double avg;
     private double rating;
     private boolean isBought;
-//    private Long id;
-//    private String name;
-//    private Long introduce;
-//    private Long ibsn;
-//    private Long publicationYear;
-//    private String publisher;
-//    private Long totalPages;
-//    private Long pointPrice;
-//    private Long fileSource;
-//    private Long isFree;
-//    private List<Author> authors = new ArrayList<>();
-//    private List<Type> types = new ArrayList<>();
-//    private List<User> users_comment;
 }

@@ -1,7 +1,6 @@
 package com.beebook.beebookproject.service.impl;
 
 import com.beebook.beebookproject.common.util.AppUtils;
-import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.entities.Type;
 import com.beebook.beebookproject.exception.AccessDeniedException;
 import com.beebook.beebookproject.exception.ResourceNotFoundException;
@@ -129,9 +128,5 @@ public class TypeServiceImpl implements TypeService {
     public List<Type> searchType(String keyword) {
         List<Type> types = typeRepository.searchType(keyword);
         return types;
-    }
-    @Override
-    public List<Type> getTop3BestTypes() {
-        return typeRepository.getTop3BestTypes();
     }
 }

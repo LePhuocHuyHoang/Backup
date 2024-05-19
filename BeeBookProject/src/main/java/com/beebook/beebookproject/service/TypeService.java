@@ -1,6 +1,5 @@
 package com.beebook.beebookproject.service;
 
-import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.entities.Type;
 import com.beebook.beebookproject.payloads.ApiResponse;
 import com.beebook.beebookproject.payloads.PagedResponse;
@@ -17,5 +16,4 @@ public interface TypeService {
     ResponseEntity<?> updateType(Long id, TypeRequest newType);
     ResponseEntity<ApiResponse> deleteType(Long typeId);
     List<Type> searchType(String keyword);
-    List<Type> getTop3BestTypes();
 }

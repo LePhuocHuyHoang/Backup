@@ -1,14 +1,11 @@
 package com.beebook.beebookproject.service;
 
 import com.beebook.beebookproject.dto.StripeChargeDto;
-import com.beebook.beebookproject.dto.StripeSubscriptionDto;
-import com.beebook.beebookproject.dto.StripeSubscriptionResponse;
 import com.beebook.beebookproject.dto.StripeTokenDto;
 import com.beebook.beebookproject.entities.Book;
 import com.beebook.beebookproject.entities.PointTransaction;
 import com.beebook.beebookproject.entities.TransactionType;
 import com.beebook.beebookproject.entities.User;
-import com.beebook.beebookproject.exception.AccessDeniedException;
 import com.beebook.beebookproject.payloads.ApiResponse;
 import com.beebook.beebookproject.repositories.BookRepository;
 import com.beebook.beebookproject.repositories.PointTransactionRepository;
@@ -185,127 +182,5 @@ public class StripeService {
             return ResponseEntity.badRequest().body("User does not have enough points to purchase this book");
         }
     }
-
-
-    public StripeSubscriptionResponse createSubscription(StripeSubscriptionDto subscriptionDto){
-        Stripe.apiKey = StripeConfig.getStripePublishableKey();
-        PaymentMethod paymentMethod = createPaymentMethod(subscriptionDto);
-        Stripe.apiKey = StripeConfig.getStripeApiKey();
-        Customer customer = createCustomer(paymentMethod, subscriptionDto);
-        Stripe.apiKey = StripeConfig.getStripeApiKey();
-        paymentMethod = attachCustomerToPaymentMethod(customer, paymentMethod);
-        Stripe.apiKey = StripeConfig.getStripeApiKey();
-        Subscription subscription = createSubscription(subscriptionDto, paymentMethod, customer);
-        Stripe.apiKey = StripeConfig.getStripeApiKey();
-        return createResponse(subscriptionDto,paymentMethod,customer,subscription);
-    }
-
-    private StripeSubscriptionResponse createResponse(StripeSubscriptionDto subscriptionDto, PaymentMethod paymentMethod, Customer customer, Subscription subscription) {
-
-        return StripeSubscriptionResponse.builder()
-                .username(subscriptionDto.getUsername())
-                .stripePaymentMethodId(paymentMethod.getId())
-                .stripeSubscriptionId(subscription.getId())
-                .stripeCustomerId(customer.getId())
-                .build();
-    }
-
-    private PaymentMethod createPaymentMethod(StripeSubscriptionDto subscriptionDto){
-
-        try {
-
-            Map<String, Object> card = new HashMap<>();
-
-            card.put("number", subscriptionDto.getCardNumber());
-            card.put("exp_month", Integer.parseInt(subscriptionDto.getExpMonth()));
-            card.put("exp_year", Integer.parseInt(subscriptionDto.getExpYear()));
-            card.put("cvc", subscriptionDto.getCvc());
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("type", "card");
-            params.put("card", card);
-
-            return PaymentMethod.create(params);
-
-        } catch (StripeException e) {
-            log.error("StripeService (createPaymentMethod)", e);
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    private Customer createCustomer(PaymentMethod paymentMethod,StripeSubscriptionDto subscriptionDto){
-
-        try {
-
-            Map<String, Object> customerMap = new HashMap<>();
-            customerMap.put("name", subscriptionDto.getUsername());
-            customerMap.put("email", subscriptionDto.getEmail());
-            customerMap.put("payment_method", paymentMethod.getId());
-
-            return Customer.create(customerMap);
-        } catch (StripeException e) {
-            log.error("StripeService (createCustomer)", e);
-            throw new RuntimeException(e.getMessage());
-        }
-
-    }
-
-    private PaymentMethod attachCustomerToPaymentMethod(Customer customer,PaymentMethod paymentMethod){
-
-        try {
-
-            paymentMethod = com.stripe.model.PaymentMethod.retrieve(paymentMethod.getId());
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("customer", customer.getId());
-            paymentMethod = paymentMethod.attach(params);
-            return paymentMethod;
-
-
-        } catch (StripeException e) {
-            log.error("StripeService (attachCustomerToPaymentMethod)", e);
-            throw new RuntimeException(e.getMessage());
-        }
-
-    }
-
-    private Subscription createSubscription(StripeSubscriptionDto subscriptionDto,PaymentMethod paymentMethod,Customer customer){
-
-        try {
-
-            List<Object> items = new ArrayList<>();
-            Map<String, Object> item1 = new HashMap<>();
-            item1.put(
-                    "price",
-                    subscriptionDto.getPriceId()
-            );
-            item1.put("quantity",subscriptionDto.getNumberOfLicense());
-            items.add(item1);
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("customer", customer.getId());
-            params.put("default_payment_method", paymentMethod.getId());
-            params.put("items", items);
-            return Subscription.create(params);
-        } catch (StripeException e) {
-            log.error("StripeService (createSubscription)", e);
-            throw new RuntimeException(e.getMessage());
-        }
-
-    }
-
-    public  Subscription cancelSubscription(String subscriptionId){
-        Stripe.apiKey = StripeConfig.getStripeApiKey();
-        try {
-            Subscription retrieve = Subscription.retrieve(subscriptionId);
-            return retrieve.cancel();
-        } catch (StripeException e) {
-
-            log.error("StripeService (cancelSubscription)",e);
-        }
-
-        return null;
-    }
-
 }
 

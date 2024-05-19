@@ -18,8 +18,4 @@ public class Role {
     @Column(name = "description", length = 255, nullable = false)
     private String description;
 
-//    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "roles")
-//    private Set<User> users = new HashSet<>();
-
-    // Constructors, Getters, and Setters
 }

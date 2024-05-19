@@ -22,8 +22,6 @@ public interface AuthorRepository extends JpaRepository<Author,Long> {
     @Query(value = "SELECT a FROM Author a " +
             "WHERE LOWER(a.name) LIKE %:keyword%")
     List<Author> searchAuthor(String keyword);
-    @Query(value = "EXEC getTop3BestAuthors", nativeQuery = true)
-    List<Author> getTop3BestAuthors();
     @Query(value = "EXEC filterAuthor @birthYear= :birthYear, @typeName= :typeName", nativeQuery = true)
     List<Author> filterAuthor(@Param("birthYear") Long birthYear, @Param("typeName") String typeName);
 

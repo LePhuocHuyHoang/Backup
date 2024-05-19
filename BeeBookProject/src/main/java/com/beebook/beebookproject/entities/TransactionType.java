@@ -19,5 +19,4 @@ public class TransactionType {
     @Column(name = "type_name", length = 255, nullable = false)
     private String name;
 
-    // Constructors, Getters, and Setters
 }

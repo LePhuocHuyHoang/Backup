@@ -1,6 +1,5 @@
 package com.beebook.beebookproject.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,12 +23,10 @@ public class PointTransaction {
     private Long pointsAdded;
 
     @ManyToOne
-//    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-//    @JsonIgnore
     @JoinColumn(name = "transaction_type")
     private TransactionType transactionType;
 

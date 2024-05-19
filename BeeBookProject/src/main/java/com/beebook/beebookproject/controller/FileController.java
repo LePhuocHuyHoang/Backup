@@ -6,15 +6,9 @@ import com.beebook.beebookproject.hdfs.HadoopClient;
 import com.beebook.beebookproject.common.util.FileUtil;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
 
 /**
@@ -30,15 +24,6 @@ public class FileController {
 
     private HadoopClient hadoopClient;
 
-    /**
-     * tải tập tin lên
-     */
-    @PostMapping("upload")
-    public BaseResponse upload(@RequestParam String uploadPath, MultipartFile file) {
-        hadoopClient.copyFileToHDFS(false, true, FileUtil.MultipartFileToFile(file).getPath(), uploadPath);
-        return BaseResponse.ok();
-    }
-
     @PostMapping("uploads")
     public BaseResponse uploads(@RequestParam String uploadPath, @RequestParam("files") MultipartFile[] files) {
         List<String> filePaths = new ArrayList<>();
@@ -47,37 +32,6 @@ public class FileController {
         }
         hadoopClient.copyFilesToHDFS(false, true, filePaths, uploadPath);
         return BaseResponse.ok();
-    }
-
-//    /**
-//     * Test
-//     */
-//    @PostMapping("uploadTest")
-//    public BaseResponse uploadTest(@RequestParam String uploadPath) {
-//        hadoopClient.copyFileToHDFS(false, true, "/hadooptest/access.log-20190720", uploadPath);
-//        return BaseResponse.ok();
-//    }
-
-
-    /**
-     * Tải tập tin
-     */
-    @GetMapping("download")
-    public void download(@RequestParam String path, @RequestParam String fileName, HttpServletResponse response) {
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Expires", "0");
-        response.setHeader("charset", "utf-8");
-        response.setContentType("application/force-download");
-        response.setHeader("Content-Transfer-Encoding", "binary");
-        response.setHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
-        OutputStream os;
-        try {
-            os = response.getOutputStream();
-            hadoopClient.download(path, fileName, os);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -130,10 +84,6 @@ public class FileController {
     public BaseResponse readFile(@RequestParam String filePath) {
         return BaseResponse.ok((Object)hadoopClient.readFile(filePath));
     }
-//    getBookCover (prams bkId){
-//    /data/book/+bookkid/book-cover
-//                /data/book/+bookkid/book-cover
-//    }
 
     /**
      * Đọc nội dung tập tin byte[]
@@ -241,13 +191,6 @@ public class FileController {
 
 
 
-    /**
-     * Đổi tên tập tin hoặc thư mục
-     */
-    @PostMapping("renameFile")
-    public BaseResponse renameFile(@RequestParam String oldName, @RequestParam String newName) {
-        return BaseResponse.ok(hadoopClient.renameFile(oldName, newName));
-    }
 
     /**
      * Tải lên các tập tin địa phương
@@ -255,24 +198,6 @@ public class FileController {
     @PostMapping("uploadFileFromLocal")
     public BaseResponse uploadFileFromLocal(@RequestParam String path, @RequestParam String uploadPath) {
         hadoopClient.copyFileToHDFS(false, true, path, uploadPath);
-        return BaseResponse.ok();
-    }
-
-    /**
-     * Tải tập tin về máy cục bộ
-     */
-    @PostMapping("downloadFileFromLocal")
-    public BaseResponse downloadFileFromLocal(@RequestParam String path, @RequestParam String downloadPath) {
-        hadoopClient.downloadFileFromLocal(path, downloadPath);
-        return BaseResponse.ok();
-    }
-
-    /**
-     * Sao chép tập tin
-     */
-    @PostMapping("copyFile")
-    public BaseResponse copyFile(String sourcePath, String targetPath) {
-        hadoopClient.copyFile(sourcePath, targetPath);
         return BaseResponse.ok();
     }
 

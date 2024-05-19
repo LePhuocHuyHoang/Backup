@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProfileController {
 
-//    @GetMapping("/products")
-//    @PreAuthorize("hasAuthority('ADMIN')")
-//    public List<Product> products(){
-//        return productRepository.findAll();
-//    }
     @GetMapping("/auth")
     @ResponseBody
     public Authentication authentication(Authentication authentication) {
@@ -29,8 +24,6 @@ public class ProfileController {
         String userId = null;
         if (authentication != null && authentication.getPrincipal() != null) {
             if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.jwt.Jwt) {
-//                org.springframework.security.oauth2.jwt.Jwt jwtToken = (org.springframework.security.oauth2.jwt.Jwt) authentication.getPrincipal();
-//                userId = jwtToken.getClaimAsString("sub");
                 userId = SecurityContextHolder.getContext().getAuthentication().getName();
             }
         }

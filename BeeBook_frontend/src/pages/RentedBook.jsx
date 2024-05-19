@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "../style/Favorite.scss";
 import axios from "axios";
 import { useAuth } from "../auth/AuthProvider";
-import FavoriteItem from "../ui/FavoriteItem";
+import RentedItem from "../ui/RentedItem";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +59,7 @@ const FavoritePage = () => {
   }, [date]);
   return (
     <div className="favorite-ctn">
-      <h2>Thống kê sách đã mua</h2>
+      <h2>Sách đã mua</h2>
       <input
         type="month"
         id="start"
@@ -83,7 +83,7 @@ const FavoritePage = () => {
       >
         {favBook.length === 0 && <h4>Chưa có sách nào được mua</h4>}
         {favBook.map((book) => (
-          <FavoriteItem book={book} />
+          <RentedItem book={book} />
         ))}
       </InfiniteScroll>
     </div>

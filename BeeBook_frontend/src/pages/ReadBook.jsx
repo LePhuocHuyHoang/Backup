@@ -33,7 +33,7 @@ const ReadBook = () => {
     console.log(book);
     axios
       .post(
-        "http://localhost:8098/user/bookmark/" + book.id,
+        "http://localhost:8098/user/bookmark?bookId=" + book.id,
         { test: "test" },
         {
           headers: {

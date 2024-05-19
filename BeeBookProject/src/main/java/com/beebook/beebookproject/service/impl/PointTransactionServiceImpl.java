@@ -2,8 +2,6 @@ package com.beebook.beebookproject.service.impl;
 
 import com.beebook.beebookproject.dto.PointTransactionDTO;
 import com.beebook.beebookproject.payloads.ApiResponse;
-import com.beebook.beebookproject.dto.PointTransactionDTO;
-import com.beebook.beebookproject.payloads.ApiResponse;
 import com.beebook.beebookproject.repositories.PointTransactionRepository;
 import com.beebook.beebookproject.service.PointTransactionService;
 import org.modelmapper.ModelMapper;

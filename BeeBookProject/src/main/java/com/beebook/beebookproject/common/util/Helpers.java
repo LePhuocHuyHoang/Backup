@@ -4,7 +4,6 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTParser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class Helpers {
     @Value("${secret.key}")
@@ -32,17 +31,6 @@ public class Helpers {
             return "Password has at least 1 digit character";
         }
         return "";
-    }
-
-    public static String encrytePassword(String password) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.encode(password+secretKey);
-    }
-
-
-    public static boolean matchPassword(String rawPassword, String encodedPassword) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder.matches(rawPassword+ secretKey, encodedPassword);
     }
 
     public static String getUserByJWT(String jwtTokenString) {

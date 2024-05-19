@@ -73,42 +73,6 @@ public class Book {
     @JsonIgnoreProperties("users_comment")
     @JsonIgnore
     private List<User> users_comment = new ArrayList<>();
-
-//
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "rating",
-//            joinColumns = @JoinColumn(name = "book_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Set<User> users_rating;
-//
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "report",
-//            joinColumns = @JoinColumn(name = "book_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Set<User> users_report;
-//
-//
-//    // Định nghĩa quan hệ Many-to-Many với bảng User
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "bookmark", // Tên của bảng trung gian
-//            joinColumns = @JoinColumn(name = "book_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Set<User> users_bookmark;
-//
-//    // Định nghĩa quan hệ Many-to-Many với bảng User
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "rental_receipt", // Tên của bảng trung gian
-//            joinColumns = @JoinColumn(name = "book_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Set<User> users_rental;
     @Override
     public String toString() {
         return "Book{" +

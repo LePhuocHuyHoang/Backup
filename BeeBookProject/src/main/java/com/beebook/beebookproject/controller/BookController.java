@@ -2,15 +2,10 @@ package com.beebook.beebookproject.controller;
 
 import com.beebook.beebookproject.common.util.Helpers;
 import com.beebook.beebookproject.payloads.ApiResponse;
-import com.beebook.beebookproject.common.util.AppConstants;
-import com.beebook.beebookproject.common.util.AppUtils;
 import com.beebook.beebookproject.dto.SearchDTO;
 import com.beebook.beebookproject.entities.Book;
 import com.beebook.beebookproject.exception.AccessDeniedException;
 import com.beebook.beebookproject.exception.ResponseEntityErrorException;
-import com.beebook.beebookproject.payloads.BookResponse;
-import com.beebook.beebookproject.payloads.PagedResponse;
-import com.beebook.beebookproject.payloads.request.BookRequest;
 import com.beebook.beebookproject.service.BookService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -22,7 +17,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -41,14 +35,6 @@ public class BookController {
         return exception.getApiResponse();
     }
 
-    @GetMapping("/all")
-    public PagedResponse<BookResponse> getAllBooks(
-            @RequestParam(name = "page", required = false, defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) Integer page,
-            @RequestParam(name = "size", required = false, defaultValue = AppConstants.DEFAULT_PAGE_SIZE) Integer size) {
-        AppUtils.validatePageNumberAndSize(page, size);
-        return bookService.getAllBooks(page, size);
-    }
-
     @GetMapping("/getBook")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> getBook(@RequestParam(name = "bookId") Long bookId) {
@@ -62,20 +48,7 @@ public class BookController {
     public ResponseEntity<?> getBookGuest(@RequestParam(name = "bookId") Long bookId) {
         return bookService.getBookGuest(bookId);
     }
-    @PostMapping
-    public ResponseEntity<?> addBook(@RequestBody BookRequest bookRequest) {
-        return bookService.addBook(bookRequest);
-    }
 
-    @PutMapping()
-    public ResponseEntity<?> updateBook(@RequestParam(name = "bookId") Long id,
-                                                   @RequestBody BookRequest newBook) {
-        return bookService.updateBook(id,newBook);
-    }
-    @DeleteMapping()
-    public ResponseEntity<ApiResponse> deleteBook(@RequestParam(name = "bookId") Long bookId) {
-        return bookService.deleteBook(bookId);
-    }
     @GetMapping("/search")
     public ResponseEntity<List<SearchDTO>> searchBook(@RequestParam(name = "keyword") String keyword) {
         List<SearchDTO> books = bookService.searchBook(keyword);
@@ -85,15 +58,6 @@ public class BookController {
     public ResponseEntity<List<Book>> getTop3BookSelling() {
         List<Book> topBooks = bookService.getTop3BookSelling();
         return new ResponseEntity<>(topBooks, HttpStatus.OK);
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<List<Book>> filterBook(@RequestParam(name = "typeName", required = false) String typeName,
-                                                 @RequestParam(name = "authorName", required = false) String authorName,
-                                                 @RequestParam(name = "minPrice", required = false) BigDecimal minPointPrice,
-                                                 @RequestParam(name = "maxPrice", required = false) BigDecimal maxPointPrice) {
-        List<Book> filterBook = bookService.filterBook(typeName, authorName, minPointPrice, maxPointPrice);
-        return new ResponseEntity<>(filterBook, HttpStatus.OK);
     }
 
     @PostMapping("/ratingBook")

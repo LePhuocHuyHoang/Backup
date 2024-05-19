@@ -17,9 +17,4 @@ public class BeeBookProjectApplication {
         return new ModelMapper();
     }
 
-    // Mã hóa BCrypt
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 }
