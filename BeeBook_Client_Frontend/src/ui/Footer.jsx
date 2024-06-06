@@ -31,7 +31,6 @@ const Footer = () => {
                 <li>Lê Tự Toàn</li>
                 <li>Nguyễn Đăng Minh Quang</li>
                 <li>Lê Công Lương</li>
-                <li>Phạm Tấn Đạt</li>
                 <li>Lê Phước Huy Hoàng</li>
               </ul>
             </div>

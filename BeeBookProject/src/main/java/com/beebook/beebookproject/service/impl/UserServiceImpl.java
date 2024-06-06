@@ -99,7 +99,12 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<List<RentalReceiptDTO>>(receiptDTOs, HttpStatus.OK);
     }
 
-
+    @Override
+    public List<Map<String, Object>> getBookmark(String username, Long offset, Long fetch) {
+        User user = userRepository.findByUsername(username);
+        List<Map<String, Object>> bookmark = userRepository.getBookmark(user.getId(), offset, fetch);
+        return modifyBooksInfo(bookmark);
+    }
     @Override
     public User findByUserName(String userName) {
         return userRepository.findByUsername(userName);
@@ -149,12 +154,7 @@ public class UserServiceImpl implements UserService {
             return new ArrayList<>();
         }
     }
-    @Override
-    public List<Map<String, Object>> getBookmark(String username, Long offset, Long fetch) {
-        User user = userRepository.findByUsername(username);
-        List<Map<String, Object>> bookmark = userRepository.getBookmark(user.getId(), offset, fetch);
-        return modifyBooksInfo(bookmark);
-    }
+
 
     @Override
     public ResponseEntity<?> getProfile(String userName) {

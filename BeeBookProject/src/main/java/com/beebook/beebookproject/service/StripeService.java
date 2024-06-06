@@ -85,11 +85,9 @@ public class StripeService {
             ApiResponse apiResponse = new ApiResponse(false, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
         }
-
-
     }
+    // Thuat Toan Luhn
     private boolean isValidCardNumber(String cardNumber) {
-
         int sum = 0;
         boolean alternate = false;
         for (int i = cardNumber.length() - 1; i >= 0; i--) {

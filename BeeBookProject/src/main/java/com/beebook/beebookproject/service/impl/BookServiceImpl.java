@@ -242,7 +242,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseEntity<ApiResponse> reportBook(String userName, Long bookId, String reportContent) {
-//        List<Object[]> checkExistsUser = bookRepository.checkExistingUser(userId);
         List<Object[]> checkExistsUser = bookRepository.checkExistingUser(userName);
 
         if(checkExistsUser.isEmpty()) {
@@ -261,7 +260,6 @@ public class BookServiceImpl implements BookService {
             return new ResponseEntity<ApiResponse>(new ApiResponse(Boolean.FALSE, "The value of the parameter cannot be negative"), HttpStatus.BAD_REQUEST);
         }
         Long offset = (page - 1) * limit;
-//        Long fetch = limit;
         List<Object[]> objects = bookRepository.getComment(bookId, offset, limit);
         List<CommentDTO> commentDTOs = new ArrayList<CommentDTO>();
         for(Object[] obj: objects) {
@@ -283,6 +281,10 @@ public class BookServiceImpl implements BookService {
     public List<Map<String, Object>> getNewBooks() {
         List<Map<String, Object>> newBooks = bookRepository.getNewBooks();
         return modifyBooksInfo(newBooks);
+    }
+    @Override
+    public List<Book> getTopRentalBooks(int numberOfBooks) {
+        return bookRepository.getTopRentalBooks(numberOfBooks);
     }
     private List<Map<String, Object>> modifyBooksInfo(List<Map<String, Object>> booksInfo) {
         List<Map<String, Object>> modifiedBooksInfo = new ArrayList<>();
@@ -319,9 +321,5 @@ public class BookServiceImpl implements BookService {
             e.printStackTrace();
             return new ArrayList<>();
         }
-    }
-    @Override
-    public List<Book> getTopRentalBooks(int numberOfBooks) {
-        return bookRepository.getTopRentalBooks(numberOfBooks);
     }
 }

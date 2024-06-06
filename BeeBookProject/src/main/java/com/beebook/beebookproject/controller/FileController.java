@@ -40,34 +40,11 @@ public class FileController {
     @PostMapping("mkdir")
     public BaseResponse mkdir(@RequestParam String folderPath) {
         boolean result = true;
-//        if(hadoopClient.isPathExists(folderPath)){
-//            return BaseResponse.ok(HttpStatus.BAD_REQUEST, "Folder already exists ");
-//        }
         if (StringUtils.isNotEmpty(folderPath)) {
             result = hadoopClient.mkdirfolder(folderPath, true);
         }
         return BaseResponse.ok(result);
     }
-
-    /**
-     * Thông tin thư mục
-     */
-    @GetMapping("getPathInfo")
-    public BaseResponse<List<Map<String, Object>>> getPathInfo(@RequestParam String path) {
-        return BaseResponse.ok(hadoopClient.getPathInfo(path));
-    }
-
-    /**
-     * Lấy danh sách các file trong thư mục
-     */
-    @GetMapping("getFileList")
-    public BaseResponse<List<Map<String,String>>> getFileList(@RequestParam String path) {
-        if (StringUtils.isEmpty(path)) {
-            return null;
-        }
-        return BaseResponse.ok(hadoopClient.getFileList(path));
-    }
-
     /**
      * Xóa tập tin hoặc thư mục
      */
@@ -76,31 +53,6 @@ public class FileController {
         hadoopClient.rmdir(path, fileName);
         return BaseResponse.ok();
     }
-
-    /**
-     * Đọc nội dung tập tin
-     */
-    @GetMapping("readFile")
-    public BaseResponse readFile(@RequestParam String filePath) {
-        return BaseResponse.ok((Object)hadoopClient.readFile(filePath));
-    }
-
-    /**
-     * Đọc nội dung tập tin byte[]
-     */
-    @GetMapping("/readFileToImage")
-    public BaseResponse readFileToImage(@RequestParam String filePath) {
-        byte[] imageData = hadoopClient.readFiletoByte(filePath);
-        String base64Image = Base64.getEncoder().encodeToString(imageData);
-
-        // Kiểm tra xem dữ liệu hợp lệ trước khi trả về
-        if (imageData != null) {
-            return BaseResponse.ok(base64Image);
-        } else {
-            return BaseResponse.error("Không thể đọc tệp.");
-        }
-    }
-
     @GetMapping("/readFileToImagePages")
     public BaseResponse<?> readFileToImagePages(@RequestParam int page, @RequestParam int bookId) {
 
@@ -186,21 +138,6 @@ public class FileController {
             return BaseResponse.error("Error occurred while fetching book covers.");
         }
     }
-
-
-
-
-
-
-    /**
-     * Tải lên các tập tin địa phương
-     */
-    @PostMapping("uploadFileFromLocal")
-    public BaseResponse uploadFileFromLocal(@RequestParam String path, @RequestParam String uploadPath) {
-        hadoopClient.copyFileToHDFS(false, true, path, uploadPath);
-        return BaseResponse.ok();
-    }
-
     /**
      * Đọc List image
      * @param directoryPath

@@ -34,6 +34,26 @@ public class BookController {
     public ResponseEntity<ApiResponse> handleExceptions(ResponseEntityErrorException exception) {
         return exception.getApiResponse();
     }
+    @GetMapping("/top3")
+    public ResponseEntity<List<Book>> getTop3BookSelling() {
+        List<Book> topBooks = bookService.getTop3BookSelling();
+        return new ResponseEntity<>(topBooks, HttpStatus.OK);
+    }
+    @GetMapping("/featured")
+    public ResponseEntity<List<Map<String, Object>>> getFeaturedBooks(
+            @RequestParam(name = "top", required = false, defaultValue = "5") int top) {
+        List<Map<String, Object>> books = bookService.getFeaturedBooks(top);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+    @GetMapping("/newbooks")
+    public List<Map<String, Object>> getNewBooks() {
+        return bookService.getNewBooks();
+    }
+
+    @GetMapping("/top-rental-books")
+    public List<Book> getTopRentalBooks(@RequestParam(defaultValue = "20") int rank) {
+        return bookService.getTopRentalBooks (rank);
+    }
 
     @GetMapping("/getBook")
     @PreAuthorize("hasAuthority('USER')")
@@ -53,11 +73,6 @@ public class BookController {
     public ResponseEntity<List<SearchDTO>> searchBook(@RequestParam(name = "keyword") String keyword) {
         List<SearchDTO> books = bookService.searchBook(keyword);
         return new ResponseEntity<>(books, HttpStatus.OK);
-    }
-    @GetMapping("/top3")
-    public ResponseEntity<List<Book>> getTop3BookSelling() {
-        List<Book> topBooks = bookService.getTop3BookSelling();
-        return new ResponseEntity<>(topBooks, HttpStatus.OK);
     }
 
     @PostMapping("/ratingBook")
@@ -80,6 +95,40 @@ public class BookController {
         String username = Helpers.getUserByJWT(jwt);
         return bookService.ratingBook(username, bookId, rating);
     }
+    @GetMapping("/getComments")
+    public ResponseEntity<?> getComment(
+            @RequestParam Long bookId,
+            @RequestParam(required = false) Long page,
+            @RequestParam(required = false) Long limit,
+            HttpServletRequest request
+    ) {
+        try {
+            boolean isParamValid = false;
+            if (request.getParameterValues("bookId") != null && request.getParameterValues("bookId").length > 1) {
+                isParamValid = true;
+            }else if (request.getParameterValues("page") != null && request.getParameterValues("page").length > 1) {
+                isParamValid = true;
+            } else if (request.getParameterValues("limit") != null && request.getParameterValues("limit").length > 1) {
+                isParamValid = true;
+            }
+            if (isParamValid) {
+                throw new AccessDeniedException("Only one param value on each attribute should be provided");
+            }
+            if (page == null) {
+                page =Long.valueOf(1) ;
+            }
+            if (limit == null) {
+                limit = Long.valueOf(5);
+            }
+
+            return bookService.getComment(bookId, page, limit);
+        } catch (AccessDeniedException e) {
+            return new ResponseEntity<>(
+                    new ApiResponse(Boolean.FALSE, e.getMessage()),
+                    HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/commentBook")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ApiResponse> commentBook(
@@ -125,53 +174,5 @@ public class BookController {
         return bookService.reportBook(username, bookId, report);
     }
 
-    @GetMapping("/getComments")
-    public ResponseEntity<?> getComment(
-            @RequestParam Long bookId,
-            @RequestParam(required = false) Long page,
-            @RequestParam(required = false) Long limit,
-            HttpServletRequest request
-    ) {
-        try {
-            boolean isParamValid = false;
-            if (request.getParameterValues("bookId") != null && request.getParameterValues("bookId").length > 1) {
-                isParamValid = true;
-            }else if (request.getParameterValues("page") != null && request.getParameterValues("page").length > 1) {
-                isParamValid = true;
-            } else if (request.getParameterValues("limit") != null && request.getParameterValues("limit").length > 1) {
-                isParamValid = true;
-            }
-            if (isParamValid) {
-                throw new AccessDeniedException("Only one param value on each attribute should be provided");
-            }
-            if (page == null) {
-                page =Long.valueOf(1) ;
-            }
-            if (limit == null) {
-                limit = Long.valueOf(5);
-            }
 
-            return bookService.getComment(bookId, page, limit);
-        } catch (AccessDeniedException e) {
-            return new ResponseEntity<>(
-                    new ApiResponse(Boolean.FALSE, e.getMessage()),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-    @GetMapping("/featured")
-    public ResponseEntity<List<Map<String, Object>>> getFeaturedBooks(
-            @RequestParam(name = "top", required = false, defaultValue = "5") int top) {
-        List<Map<String, Object>> books = bookService.getFeaturedBooks(top);
-        return new ResponseEntity<>(books, HttpStatus.OK);
-    }
-
-    @GetMapping("/newbooks")
-    public List<Map<String, Object>> getNewBooks() {
-        return bookService.getNewBooks();
-    }
-
-    @GetMapping("/top-rental-books")
-    public List<Book> getTopRentalBooks(@RequestParam(defaultValue = "20") int rank) {
-        return bookService.getTopRentalBooks (rank);
-    }
 }
